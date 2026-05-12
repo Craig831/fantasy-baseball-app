@@ -139,14 +139,18 @@ The project constitution (`.specify/memory/constitution.md`) defines core princi
 - Checklists must be complete before implementation (or explicit approval required)
 
 ## Active Technologies
-- TypeScript 5.0+ / Node.js 20 LTS (001-player-research-scoring, 002-player-research)
-- PostgreSQL 15+ (relational data with JSONB for flexible scoring configs) (001-player-research-scoring, 002-player-research)
-- NestJS 11 (backend framework) (002-player-research)
-- Prisma ORM 6 (database ORM) (002-player-research)
-- React 18 (frontend framework) (002-player-research)
-- Jest (testing framework) (002-player-research)
-- MLB-StatsAPI (external data source for player statistics) (002-player-research)
+- TypeScript 5.7 / Node.js 20 LTS (build & dev tooling only; runtime is the browser) (003-jellybaseballv2-api-migration)
+- React 19 + React Router 7 + TanStack Query 5 + Axios 1.12 + `@react-aria/*` + Tailwind 3 + Vite 6 (003-jellybaseballv2-api-migration)
+- `openapi-typescript` (dev) for DTO generation; `jwt-decode` (runtime) for claims (003-jellybaseballv2-api-migration)
+- Vitest 4 + Testing Library + jsdom + MSW for tests (003-jellybaseballv2-api-migration)
+- External JellyBaseballV2 API (ASP.NET Core, http://localhost:5000) — owns auth, users, players, teams, leagues, scoring, lineups, saved searches (003-jellybaseballv2-api-migration)
+- TypeScript 5.0+ / Node.js 20 LTS (001-player-research-scoring, 002-player-research) [pre-003]
+- ~~PostgreSQL 15+~~ — removed in 003-jellybaseballv2-api-migration
+- ~~NestJS 11 / Prisma ORM 6 / Jest backend~~ — removed in 003-jellybaseballv2-api-migration
+- ~~MLB-StatsAPI direct integration~~ — now owned by JellyBaseballV2 API
+- ~~React 18~~ — upgraded to React 19 in this branch
 
 ## Recent Changes
+- 003-jellybaseballv2-api-migration: Replaced local NestJS+Prisma+Postgres backend with calls to external JellyBaseballV2 ASP.NET Core API; introduced typed client with single-flight refresh, RFC 7807 error mapping, and JSON-blob boundary helpers
 - 002-player-research: Added NestJS 11, Prisma ORM 6, React 18, Jest, MLB-StatsAPI integration
 - 001-player-research-scoring: Added TypeScript 5.0+ / Node.js 20 LTS
