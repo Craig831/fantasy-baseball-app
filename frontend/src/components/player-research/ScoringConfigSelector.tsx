@@ -30,7 +30,7 @@ const ScoringConfigSelector: React.FC<ScoringConfigSelectorProps> = ({
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/scoring-configs`,
+        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'}/scoring-configs`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

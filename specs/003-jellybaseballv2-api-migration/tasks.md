@@ -33,11 +33,11 @@ This is a single-project web client. All application code lives under `frontend/
 
 **Purpose**: Install tooling, create directory scaffolding, generate the typed contracts the rest of the work depends on.
 
-- [ ] T001 Install runtime and dev dependencies in `frontend/package.json`: add `jwt-decode` (runtime), `openapi-typescript` (dev), `msw` (dev). Run `npm install` from `frontend/`.
-- [ ] T002 [P] Add npm scripts in `frontend/package.json`: `"gen:types": "openapi-typescript http://localhost:5000/swagger/v1/swagger.json --output src/api/types.generated.ts"`.
-- [ ] T003 [P] Create `frontend/.env.development.local.example` documenting `VITE_API_BASE_URL=http://localhost:5000` (and update `frontend/.gitignore` to ignore `.env.development.local` if not already). Also grep the entire repo for any usage of the legacy `VITE_API_URL` env var (the existing `frontend/src/services/api.ts` reads it) and replace each occurrence with `VITE_API_BASE_URL`, including `frontend/.env*` files and any CI configuration. Goal: only one env var name exists in the tree once Phase 1 ends.
-- [ ] T004 [P] Create empty directories `frontend/src/api/`, `frontend/src/auth/`, `frontend/src/test/` (with placeholder `.gitkeep` files where appropriate).
-- [ ] T005 With the JellyBaseballV2 API running locally, generate `frontend/src/api/types.generated.ts` via `npm run gen:types` from `frontend/`. Commit the generated file.
+- [X] T001 Install runtime and dev dependencies in `frontend/package.json`: add `jwt-decode` (runtime), `openapi-typescript` (dev), `msw` (dev). Run `npm install` from `frontend/`.
+- [X] T002 [P] Add npm scripts in `frontend/package.json`: `"gen:types": "openapi-typescript http://localhost:5000/swagger/v1/swagger.json --output src/api/types.generated.ts"`.
+- [X] T003 [P] Create `frontend/.env.development.local.example` documenting `VITE_API_BASE_URL=http://localhost:5000` (and update `frontend/.gitignore` to ignore `.env.development.local` if not already). Also grep the entire repo for any usage of the legacy `VITE_API_URL` env var (the existing `frontend/src/services/api.ts` reads it) and replace each occurrence with `VITE_API_BASE_URL`, including `frontend/.env*` files and any CI configuration. Goal: only one env var name exists in the tree once Phase 1 ends.
+- [X] T004 [P] Create empty directories `frontend/src/api/`, `frontend/src/auth/`, `frontend/src/test/` (with placeholder `.gitkeep` files where appropriate).
+- [X] T005 With the JellyBaseballV2 API running locally, generate `frontend/src/api/types.generated.ts` via `npm run gen:types` from `frontend/`. Commit the generated file.
 
 **Checkpoint**: `npm run dev` still boots the existing app; new `src/api/` directory holds only `types.generated.ts`.
 
@@ -51,19 +51,19 @@ This is a single-project web client. All application code lives under `frontend/
 
 ### Foundational implementation
 
-- [ ] T006 Implement token store in `frontend/src/api/tokens.ts`: module-scoped `accessToken`, `localStorage`-backed `refreshToken` (key `jb2:refreshToken`), `setTokens`/`clearTokens`/`getAccessToken`/`getRefreshToken` API, and a `window.addEventListener('storage', ...)` handler that re-syncs the in-memory access token when another tab rotates the refresh token.
-- [ ] T007 [P] Implement RFC 7807 error mapper in `frontend/src/api/errors.ts`: export `ApiError`, `isApiError`, and `splitValidationDetail(err)` per `contracts/auth.md` and `research.md` §5.
-- [ ] T008 [P] Implement JSON-blob helpers and types in `frontend/src/api/jsonBlobs.ts`: `parseJsonBlob<T>` (returns `null` for `"{}"`/`"[]"`/empty), `stringifyJsonBlob<T>`, and the five typed shapes (`PositionSlot`, `StatCategoryWeight`, `DraftOrder`, `LineupCategory`, `SavedSearchFilters`) per `data-model.md` §7. Enforce `filterVersion: 2` on `SavedSearchFilters` serialize.
-- [ ] T009 Implement Axios client in `frontend/src/api/client.ts`: base URL from `import.meta.env.VITE_API_BASE_URL`, request interceptor that attaches `Authorization: Bearer ${accessToken}` from T006, response interceptor with single-flight `inFlightRefresh` promise, retry-once logic, RFC 7807 mapping via T007, clear-and-redirect via `react-router` (not `window.location.href`). **Depends on T006, T007.**
-- [ ] T010 Wire `@tanstack/react-query` `QueryClientProvider` and `ReactQueryDevtools` in `frontend/src/App.tsx`. Set sensible defaults (`staleTime: 30_000`, `refetchOnWindowFocus: false` for now).
-- [ ] T011 [P] Configure MSW: create `frontend/src/test/mswHandlers.ts` with empty default array, `frontend/src/test/mswServer.ts` (Node setup), and update `frontend/src/setupTests.ts` to start/stop the server around the suite.
+- [X] T006 Implement token store in `frontend/src/api/tokens.ts`: module-scoped `accessToken`, `localStorage`-backed `refreshToken` (key `jb2:refreshToken`), `setTokens`/`clearTokens`/`getAccessToken`/`getRefreshToken` API, and a `window.addEventListener('storage', ...)` handler that re-syncs the in-memory access token when another tab rotates the refresh token.
+- [X] T007 [P] Implement RFC 7807 error mapper in `frontend/src/api/errors.ts`: export `ApiError`, `isApiError`, and `splitValidationDetail(err)` per `contracts/auth.md` and `research.md` §5.
+- [X] T008 [P] Implement JSON-blob helpers and types in `frontend/src/api/jsonBlobs.ts`: `parseJsonBlob<T>` (returns `null` for `"{}"`/`"[]"`/empty), `stringifyJsonBlob<T>`, and the five typed shapes (`PositionSlot`, `StatCategoryWeight`, `DraftOrder`, `LineupCategory`, `SavedSearchFilters`) per `data-model.md` §7. Enforce `filterVersion: 2` on `SavedSearchFilters` serialize.
+- [X] T009 Implement Axios client in `frontend/src/api/client.ts`: base URL from `import.meta.env.VITE_API_BASE_URL`, request interceptor that attaches `Authorization: Bearer ${accessToken}` from T006, response interceptor with single-flight `inFlightRefresh` promise, retry-once logic, RFC 7807 mapping via T007, clear-and-redirect via `react-router` (not `window.location.href`). **Depends on T006, T007.**
+- [X] T010 Wire `@tanstack/react-query` `QueryClientProvider` and `ReactQueryDevtools` in `frontend/src/App.tsx`. Set sensible defaults (`staleTime: 30_000`, `refetchOnWindowFocus: false` for now).
+- [X] T011 [P] Configure MSW: create `frontend/src/test/mswHandlers.ts` with empty default array, `frontend/src/test/mswServer.ts` (Node setup), and update `frontend/src/setupTests.ts` to start/stop the server around the suite.
 
 ### Foundational tests
 
-- [ ] T012 [P] Unit tests for token store in `frontend/src/api/tokens.test.ts`: set/clear, localStorage persistence, cross-tab `storage`-event resync.
-- [ ] T013 [P] Unit tests for error mapper in `frontend/src/api/errors.test.ts`: `isApiError` type guard, `splitValidationDetail` behavior on multi-error `detail` strings.
-- [ ] T014 [P] Unit tests for JSON-blob helpers in `frontend/src/api/jsonBlobs.test.ts`: round-trip the five shapes, `"{}"`/`"[]"` → null, `filterVersion: 2` enforcement (parser rejects, serializer always sets).
-- [ ] T015 [P] Unit tests for client interceptor in `frontend/src/api/client.test.ts`: 401 → single-flight refresh + retry-once, 401-after-refresh → clear tokens + redirect, concurrent request coalescing onto a single refresh promise, RFC 7807 → `ApiError`.
+- [X] T012 [P] Unit tests for token store in `frontend/src/api/tokens.test.ts`: set/clear, localStorage persistence, cross-tab `storage`-event resync.
+- [X] T013 [P] Unit tests for error mapper in `frontend/src/api/errors.test.ts`: `isApiError` type guard, `splitValidationDetail` behavior on multi-error `detail` strings.
+- [X] T014 [P] Unit tests for JSON-blob helpers in `frontend/src/api/jsonBlobs.test.ts`: round-trip the five shapes, `"{}"`/`"[]"` → null, `filterVersion: 2` enforcement (parser rejects, serializer always sets).
+- [X] T015 [P] Unit tests for client interceptor in `frontend/src/api/client.test.ts`: 401 → single-flight refresh + retry-once, 401-after-refresh → clear tokens + redirect, concurrent request coalescing onto a single refresh promise, RFC 7807 → `ApiError`.
 
 **Checkpoint**: All Phase 2 tasks pass `npm test`. The typed-client foundation is ready; user-story phases may now begin in parallel.
 

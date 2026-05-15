@@ -73,7 +73,7 @@ const PlayerResearch: React.FC = () => {
   const loadScoringConfig = useCallback(async (configId: string) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://localhost:3000/api'}/scoring-configs/${configId}`,
+        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'}/scoring-configs/${configId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
