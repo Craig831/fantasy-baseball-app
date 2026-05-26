@@ -1,29 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
+
+import { useAuth } from '../../auth/AuthContext';
 
 export const Header: React.FC = () => {
-  const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
+  const { currentUser, signOut } = useAuth();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await api.get('/auth/me');
-        setUser(response.data.data);
-      } catch (error) {
-        // If user fetch fails, redirect to login
-        navigate('/login');
-      }
-    };
-
-    fetchUser();
-  }, [navigate]);
-
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await signOut();
+    } finally {
+      navigate('/login', { replace: true });
+    }
   };
 
   return (
@@ -39,7 +28,9 @@ export const Header: React.FC = () => {
             </button>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-gray-700">{user?.email}</span>
+            {currentUser?.email && (
+              <span className="text-gray-700">{currentUser.email}</span>
+            )}
             <button
               onClick={() => navigate('/account')}
               className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

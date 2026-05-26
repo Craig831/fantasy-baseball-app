@@ -77,22 +77,22 @@ This is a single-project web client. All application code lives under `frontend/
 
 ### Implementation for US1
 
-- [ ] T016 [US1] Auth API module in `frontend/src/api/auth.ts`: `register`, `login`, `refresh`, `logout`, `getCurrentUser` per `contracts/auth.md`. All functions use the `client` from T009 and import generated types from `types.generated.ts`.
-- [ ] T017 [P] [US1] Auth API unit tests in `frontend/src/api/auth.test.ts` (MSW-backed): each endpoint's happy and error paths.
-- [ ] T018 [P] [US1] Auth context in `frontend/src/auth/AuthContext.tsx`: `useAuth()` exposing `currentUser`, `signIn(email, password)`, `register(payload)`, `signOut()`, `isLoading`, `isAuthenticated`. On boot, hydrate by calling `refresh` if a refresh token exists.
-- [ ] T019 [P] [US1] `ProtectedRoute` component in `frontend/src/auth/ProtectedRoute.tsx`: redirects unauthenticated users to `/login`, preserving the originally requested path via `react-router` state.
-- [ ] T020 [P] [US1] `LoginPage` in `frontend/src/auth/LoginPage.tsx` using existing `@react-aria/*` primitives. On success, navigate to the preserved redirect path or `/`.
-- [ ] T021 [P] [US1] `RegisterPage` in `frontend/src/auth/RegisterPage.tsx` with client-side password rules (min 8 chars, ≥1 digit) mirroring AUTH.md.
-- [ ] T022 [US1] Wire `<AuthProvider>` at the app root in `frontend/src/App.tsx`. **Depends on T010, T018.**
-- [ ] T023 [US1] Add `/login` and `/register` routes and wrap existing protected pages in `ProtectedRoute` in `frontend/src/App.tsx` (or wherever the router lives). **Depends on T019, T020, T021, T022.**
-- [ ] T024 [US1] Add a logout control to the existing header/menu component (locate via `frontend/src/components/common/`). Calls `signOut()` from `useAuth` and navigates to `/login`.
+- [X] T016 [US1] Auth API module in `frontend/src/api/auth.ts`: `register`, `login`, `refresh`, `logout`, `getCurrentUser` per `contracts/auth.md`. All functions use the `client` from T009 and import generated types from `types.generated.ts`.
+- [X] T017 [P] [US1] Auth API unit tests in `frontend/src/api/auth.test.ts` (MSW-backed): each endpoint's happy and error paths.
+- [X] T018 [P] [US1] Auth context in `frontend/src/auth/AuthContext.tsx`: `useAuth()` exposing `currentUser`, `signIn(email, password)`, `register(payload)`, `signOut()`, `isLoading`, `isAuthenticated`. On boot, hydrate by calling `refresh` if a refresh token exists.
+- [X] T019 [P] [US1] `ProtectedRoute` component in `frontend/src/auth/ProtectedRoute.tsx`: redirects unauthenticated users to `/login`, preserving the originally requested path via `react-router` state.
+- [X] T020 [P] [US1] `LoginPage` in `frontend/src/auth/LoginPage.tsx` using existing `@react-aria/*` primitives. On success, navigate to the preserved redirect path or `/`.
+- [X] T021 [P] [US1] `RegisterPage` in `frontend/src/auth/RegisterPage.tsx` with client-side password rules (min 8 chars, ≥1 digit) mirroring AUTH.md.
+- [X] T022 [US1] Wire `<AuthProvider>` at the app root in `frontend/src/App.tsx`. **Depends on T010, T018.**
+- [X] T023 [US1] Add `/login` and `/register` routes and wrap existing protected pages in `ProtectedRoute` in `frontend/src/App.tsx` (or wherever the router lives). **Depends on T019, T020, T021, T022.**
+- [X] T024 [US1] Add a logout control to the existing header/menu component (locate via `frontend/src/components/common/`). Calls `signOut()` from `useAuth` and navigates to `/login`.
 
 ### Tests for US1
 
-- [ ] T025 [P] [US1] `AuthContext` component tests in `frontend/src/auth/AuthContext.test.tsx`: register success, login success, login failure surfaces validation detail, signOut clears tokens, boot hydration uses refresh token.
-- [ ] T026 [P] [US1] `ProtectedRoute` tests in `frontend/src/auth/ProtectedRoute.test.tsx`: unauthenticated redirect, authenticated pass-through, redirect-state preservation.
-- [ ] T027 [P] [US1] `LoginPage` tests in `frontend/src/auth/LoginPage.test.tsx`: form validation, submit triggers `signIn`, error surfacing.
-- [ ] T028 [P] [US1] `RegisterPage` tests in `frontend/src/auth/RegisterPage.test.tsx`: password-rule validation, submit triggers `register`, semicolon-delimited 400 errors render inline.
+- [X] T025 [P] [US1] `AuthContext` component tests in `frontend/src/auth/AuthContext.test.tsx`: register success, login success, login failure surfaces validation detail, signOut clears tokens, boot hydration uses refresh token.
+- [X] T026 [P] [US1] `ProtectedRoute` tests in `frontend/src/auth/ProtectedRoute.test.tsx`: unauthenticated redirect, authenticated pass-through, redirect-state preservation.
+- [X] T027 [P] [US1] `LoginPage` tests in `frontend/src/auth/LoginPage.test.tsx`: form validation, submit triggers `signIn`, error surfacing.
+- [X] T028 [P] [US1] `RegisterPage` tests in `frontend/src/auth/RegisterPage.test.tsx`: password-rule validation, submit triggers `register`, semicolon-delimited 400 errors render inline.
 - [ ] T029 [US1] Hand-execute Quickstart §5 against the live API and check off acceptance scenarios in `spec.md` US1 #1–#5.
 
 **Checkpoint**: US1 is fully functional. Auth-protected views from prior branches still load; the legacy `services/api.ts` still backs them but the new auth flow is now driving sessions.
