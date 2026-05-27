@@ -1,6 +1,6 @@
 # Docker Setup Guide
 
-This guide explains how to run the Fantasy Baseball Scorer application using Docker.
+This guide explains how to run the Fantasy Baseball App using Docker.
 
 ## Architecture
 

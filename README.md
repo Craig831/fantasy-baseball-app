@@ -1,4 +1,4 @@
-# Fantasy Baseball Scorer
+# Fantasy Baseball App
 
 A full-stack TypeScript application for researching MLB players and building fantasy baseball lineups with custom scoring configurations.
 
@@ -21,7 +21,7 @@ A full-stack TypeScript application for researching MLB players and building fan
 ## Project Structure
 
 ```
-fantasy-baseball-scorer/
+fantasy-baseball-app/
 ├── backend/                 # NestJS backend application
 │   ├── src/
 │   │   ├── config/         # Configuration files
@@ -59,7 +59,7 @@ fantasy-baseball-scorer/
 
 ```bash
 git clone <repository-url>
-cd fantasy-baseball-scorer
+cd fantasy-baseball-app
 ```
 
 ### 2. Start the Database
