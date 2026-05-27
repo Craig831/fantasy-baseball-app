@@ -163,9 +163,9 @@ This is a single-project web client. All application code lives under `frontend/
 
 ### Implementation for US4
 
-- [ ] T054 [US4] Delete the `backend/` directory in its entirety from the repository root (NestJS app, Prisma schema, all migrations including the untracked `backend/prisma/migrations/20260421195202_add_teams_and_fix_players/`, `backend/prisma.config.ts`, tests, `Dockerfile`, `eslint.config.mjs`, `package.json`, `README.md`).
-- [ ] T055 [US4] Update `docker-compose.yml`: remove the `backend` and `postgres` services; if no meaningful services remain (e.g., only the frontend served via `nginx`), delete the file outright.
-- [ ] T056 [US4] Update or delete `DOCKER.md` at the repository root to reflect the new architecture (web client only) — point developers at the JellyBaseballV2 README for API setup.
+- [X] T054 [US4] Delete the `backend/` directory in its entirety from the repository root (NestJS app, Prisma schema, all migrations including the untracked `backend/prisma/migrations/20260421195202_add_teams_and_fix_players/`, `backend/prisma.config.ts`, tests, `Dockerfile`, `eslint.config.mjs`, `package.json`, `README.md`).
+- [X] T055 [US4] Update `docker-compose.yml`: remove the `backend` and `postgres` services; if no meaningful services remain (e.g., only the frontend served via `nginx`), delete the file outright.
+- [X] T056 [US4] Update or delete `DOCKER.md` at the repository root to reflect the new architecture (web client only) — point developers at the JellyBaseballV2 README for API setup.
 - [ ] T057 [US4] Audit `infrastructure/` and remove any files that provisioned Postgres or the local NestJS backend. Keep only what serves the web client (e.g., nginx config, deployment scripts).
 - [ ] T058 [US4] Update repository-root `README.md` to describe the new architecture (web client + external API) and link to `specs/003-jellybaseballv2-api-migration/quickstart.md` for setup.
 - [ ] T059 [US4] Delete `frontend/src/services/api.ts` and `frontend/src/services/lineupService.ts` if not already deleted in earlier phases. Delete `frontend/src/services/` if empty.
