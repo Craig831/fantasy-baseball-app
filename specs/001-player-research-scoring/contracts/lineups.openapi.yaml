@@ -1,11 +1,11 @@
 openapi: 3.0.3
 info:
-  title: Fantasy Baseball Scorer - Lineups API
+  title: Fantasy Baseball App - Lineups API
   version: 1.0.0
 
 servers:
   - url: http://localhost:3000/api
-  - url: https://api.fantasy-baseball-scorer.com
+  - url: https://api.fantasy-baseball-app.com
 
 security:
   - bearerAuth: []
