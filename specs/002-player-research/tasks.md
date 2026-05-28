@@ -24,8 +24,8 @@
 
 Based on plan.md project structure:
 - **Backend**: `backend/src/`
-- **Frontend**: `frontend/src/`
-- **Tests**: `backend/tests/`, `frontend/tests/`
+- **Frontend**: `src/`
+- **Tests**: `backend/tests/`, `tests/`
 
 ---
 
@@ -37,8 +37,8 @@ Based on plan.md project structure:
 - [x] T002 Run Prisma migration for SavedSearch schema updates
 - [x] T003 [P] Add React ARIA library dependency to frontend package.json for accessibility
 - [x] T004 [P] Add lodash.isEqual dependency to frontend package.json for filter state management
-- [x] T005 [P] Create filter state types in frontend/src/features/player-research/types/filter-state.ts
-- [x] T006 [P] Create player result types with new schema in frontend/src/features/player-research/types/player-result.ts
+- [x] T005 [P] Create filter state types in src/features/player-research/types/filter-state.ts
+- [x] T006 [P] Create player result types with new schema in src/features/player-research/types/player-result.ts
 
 ---
 
@@ -79,7 +79,7 @@ Based on plan.md project structure:
 
 **Frontend - Horizontal Filter Panel UI (3-line layout)**
 
-- [x] T020 [P] [US1] REDESIGN FilterPanel component with horizontal 3-line layout in frontend/src/components/player-research/FilterPanel.tsx
+- [x] T020 [P] [US1] REDESIGN FilterPanel component with horizontal 3-line layout in src/components/player-research/FilterPanel.tsx
 - [x] T021 [P] [US1] Implement statistic type toggle control (batting/pitching) on line 1 in FilterPanel
 - [x] T022 [P] [US1] Implement season dropdown on line 1 in FilterPanel
 - [x] T023 [P] [US1] Implement status dropdown on line 1 in FilterPanel
@@ -89,7 +89,7 @@ Based on plan.md project structure:
 
 **Frontend - Filter State Management (Pending/Applied Pattern)**
 
-- [x] T027 [US1] CREATE usePlayerFilters hook with pending/applied state pattern in frontend/src/hooks/usePlayerFilters.ts
+- [x] T027 [US1] CREATE usePlayerFilters hook with pending/applied state pattern in src/hooks/usePlayerFilters.ts
 - [x] T028 [US1] Implement isDirty calculation (lodash.isEqual) in usePlayerFilters hook
 - [x] T029 [US1] Implement button enabling logic (Apply enabled when isDirty, Clear enabled when non-default) in usePlayerFilters hook
 - [x] T030 [US1] Implement filter validation (date range, season) in usePlayerFilters hook
@@ -99,10 +99,10 @@ Based on plan.md project structure:
 
 **Frontend - Player Listing Updates**
 
-- [ ] T034 [US1] Update PlayerListing to display teamAbbr instead of full team name in frontend/src/components/player-research/PlayerListing.tsx
-- [ ] T035 [US1] Update PlayerListing to format player names as "Lastname, Firstname" in frontend/src/components/player-research/PlayerListing.tsx
-- [ ] T036 [US1] Update player-research service to use new filter parameters in frontend/src/services/player-research.service.ts
-- [ ] T037 [US1] Update usePlayerResults hook to only fetch on Apply (not on filter change) in frontend/src/hooks/usePlayerResults.ts
+- [ ] T034 [US1] Update PlayerListing to display teamAbbr instead of full team name in src/components/player-research/PlayerListing.tsx
+- [ ] T035 [US1] Update PlayerListing to format player names as "Lastname, Firstname" in src/components/player-research/PlayerListing.tsx
+- [ ] T036 [US1] Update player-research service to use new filter parameters in src/services/player-research.service.ts
+- [ ] T037 [US1] Update usePlayerResults hook to only fetch on Apply (not on filter change) in src/hooks/usePlayerResults.ts
 
 **Accessibility (WCAG 2.1 AA)**
 
@@ -145,9 +145,9 @@ Based on plan.md project structure:
 
 **Frontend - Score Display & Dynamic Columns**
 
-- [ ] T056 [P] [US2] Add PTS (totalPoints) column to PlayerListing in frontend/src/components/player-research/PlayerListing.tsx
-- [ ] T057 [P] [US2] Add PPG (pointsPerGame) column to PlayerListing in frontend/src/components/player-research/PlayerListing.tsx
-- [ ] T058 [US2] CREATE dynamic column resolver function based on scoring config in frontend/src/components/player-research/PlayerListing.tsx
+- [ ] T056 [P] [US2] Add PTS (totalPoints) column to PlayerListing in src/components/player-research/PlayerListing.tsx
+- [ ] T057 [P] [US2] Add PPG (pointsPerGame) column to PlayerListing in src/components/player-research/PlayerListing.tsx
+- [ ] T058 [US2] CREATE dynamic column resolver function based on scoring config in src/components/player-research/PlayerListing.tsx
 - [ ] T059 [US2] Implement batter stat column definitions (GP, AB, H, 2B, 3B, HR, R, RBI, BB, K, SB, CS) in PlayerListing
 - [ ] T060 [US2] Implement pitcher stat column definitions (GP, GS, W, L, S, H, ER, BB, K) in PlayerListing
 - [ ] T061 [US2] Implement conditional column rendering (only show stats in scoring config) in PlayerListing
@@ -158,7 +158,7 @@ Based on plan.md project structure:
 
 **Frontend - Score Breakdown**
 
-- [ ] T066 [P] [US2] Create ScoreBreakdown component (modal) in frontend/src/components/player-research/ScoreBreakdown.tsx
+- [ ] T066 [P] [US2] Create ScoreBreakdown component (modal) in src/components/player-research/ScoreBreakdown.tsx
 - [ ] T067 [US2] Implement score breakdown display (stat × points = score) in ScoreBreakdown component
 - [ ] T068 [US2] Wire ScoreBreakdown to totalPoints column click in PlayerListing
 - [ ] T069 [US2] Fetch score breakdown from existing GET /api/players/{id}/score-breakdown endpoint
@@ -204,8 +204,8 @@ Based on plan.md project structure:
 
 **Frontend - Saved Search UI**
 
-- [ ] T085 [P] [US3] Update SavedSearches component for filterVersion 2 in frontend/src/components/player-research/SavedSearches.tsx
-- [ ] T086 [P] [US3] Update useSavedSearches hook to handle new filter structure in frontend/src/hooks/useSavedSearches.ts
+- [ ] T085 [P] [US3] Update SavedSearches component for filterVersion 2 in src/components/player-research/SavedSearches.tsx
+- [ ] T086 [P] [US3] Update useSavedSearches hook to handle new filter structure in src/hooks/useSavedSearches.ts
 - [ ] T087 [US3] Update load saved search behavior to populate new filter controls (statisticType toggle, season, positions array) in useSavedSearches hook
 - [ ] T088 [US3] Update save search functionality to capture current filterVersion 2 state in useSavedSearches hook
 - [ ] T089 [US3] Ensure saved search auto-clicks Apply after loading filters in useSavedSearches hook
@@ -228,7 +228,7 @@ Based on plan.md project structure:
 - [ ] T094 [P] Test with NVDA screen reader (Windows) per research.md guidelines
 - [ ] T095 [P] Test with VoiceOver screen reader (Mac) per research.md guidelines
 - [ ] T096 [P] Run axe-core automated accessibility tests on PlayerResearch page
-- [ ] T097 [P] Implement error boundary for player research feature in frontend/src/features/player-research/
+- [ ] T097 [P] Implement error boundary for player research feature in src/features/player-research/
 - [ ] T098 [P] Add comprehensive error messages for all API failures in PlayerResearch page
 - [ ] T099 [P] Implement graceful degradation when MLB API unavailable (show cached data with banner) in backend
 - [ ] T100 [P] Add performance monitoring for score calculation (target <2s) in backend

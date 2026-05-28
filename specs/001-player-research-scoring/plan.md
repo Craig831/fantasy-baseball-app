@@ -234,7 +234,7 @@ backend/
 ├── tsconfig.json
 └── nest-cli.json
 
-frontend/
+
 ├── src/
 │   ├── components/
 │   │   ├── auth/
@@ -306,7 +306,7 @@ infrastructure/
 └── prometheus.yml                      # Monitoring configuration
 ```
 
-**Structure Decision**: Web application (Option 2) selected. Separate backend (NestJS TypeScript) and frontend (React TypeScript) with shared RESTful API. This aligns with API-first development principle and enables independent scaling of frontend/backend. Mobile support via responsive web (not native apps per out-of-scope). NestJS modular architecture provides clear separation of concerns and built-in OpenAPI documentation generation.
+**Structure Decision**: Web application (Option 2) selected. Separate backend (NestJS TypeScript) and frontend (React TypeScript) with shared RESTful API. This aligns with API-first development principle and enables independent scaling of backend. Mobile support via responsive web (not native apps per out-of-scope). NestJS modular architecture provides clear separation of concerns and built-in OpenAPI documentation generation.
 
 ## Complexity Tracking
 

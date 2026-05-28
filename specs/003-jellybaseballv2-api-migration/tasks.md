@@ -19,12 +19,12 @@ description: "Task list for feature 003-jellybaseballv2-api-migration"
 
 ## Path Conventions
 
-This is a single-project web client. All application code lives under `frontend/src/`. New modules introduced by this branch:
+This is a single-project web client. All application code lives under `src/`. New modules introduced by this branch:
 
-- `frontend/src/api/` — typed client and shared API plumbing (NEW)
-- `frontend/src/auth/` — auth UI, context, route gates (NEW)
-- `frontend/src/test/` — MSW handlers and shared test utilities (NEW)
-- `frontend/src/features/`, `frontend/src/pages/`, `frontend/src/components/`, `frontend/src/hooks/` — existing
+- `src/api/` — typed client and shared API plumbing (NEW)
+- `src/auth/` — auth UI, context, route gates (NEW)
+- `src/test/` — MSW handlers and shared test utilities (NEW)
+- `src/features/`, `src/pages/`, `src/components/`, `src/hooks/` — existing
 - `backend/`, `infrastructure/`, `docker-compose.yml`, `DOCKER.md` — slated for removal in US4
 
 ---
@@ -33,11 +33,11 @@ This is a single-project web client. All application code lives under `frontend/
 
 **Purpose**: Install tooling, create directory scaffolding, generate the typed contracts the rest of the work depends on.
 
-- [X] T001 Install runtime and dev dependencies in `frontend/package.json`: add `jwt-decode` (runtime), `openapi-typescript` (dev), `msw` (dev). Run `npm install` from `frontend/`.
-- [X] T002 [P] Add npm scripts in `frontend/package.json`: `"gen:types": "openapi-typescript http://localhost:5000/swagger/v1/swagger.json --output src/api/types.generated.ts"`.
-- [X] T003 [P] Create `frontend/.env.development.local.example` documenting `VITE_API_BASE_URL=http://localhost:5000` (and update `frontend/.gitignore` to ignore `.env.development.local` if not already). Also grep the entire repo for any usage of the legacy `VITE_API_URL` env var (the existing `frontend/src/services/api.ts` reads it) and replace each occurrence with `VITE_API_BASE_URL`, including `frontend/.env*` files and any CI configuration. Goal: only one env var name exists in the tree once Phase 1 ends.
-- [X] T004 [P] Create empty directories `frontend/src/api/`, `frontend/src/auth/`, `frontend/src/test/` (with placeholder `.gitkeep` files where appropriate).
-- [X] T005 With the JellyBaseballV2 API running locally, generate `frontend/src/api/types.generated.ts` via `npm run gen:types` from `frontend/`. Commit the generated file.
+- [X] T001 Install runtime and dev dependencies in `package.json`: add `jwt-decode` (runtime), `openapi-typescript` (dev), `msw` (dev). Run `npm install` from the repo root.
+- [X] T002 [P] Add npm scripts in `package.json`: `"gen:types": "openapi-typescript http://localhost:5000/swagger/v1/swagger.json --output src/api/types.generated.ts"`.
+- [X] T003 [P] Create `.env.development.local.example` documenting `VITE_API_BASE_URL=http://localhost:5000` (and update `.gitignore` to ignore `.env.development.local` if not already). Also grep the entire repo for any usage of the legacy `VITE_API_URL` env var (the existing `src/services/api.ts` reads it) and replace each occurrence with `VITE_API_BASE_URL`, including `.env*` files and any CI configuration. Goal: only one env var name exists in the tree once Phase 1 ends.
+- [X] T004 [P] Create empty directories `src/api/`, `src/auth/`, `src/test/` (with placeholder `.gitkeep` files where appropriate).
+- [X] T005 With the JellyBaseballV2 API running locally, generate `src/api/types.generated.ts` via `npm run gen:types` from the repo root. Commit the generated file.
 
 **Checkpoint**: `npm run dev` still boots the existing app; new `src/api/` directory holds only `types.generated.ts`.
 
@@ -51,19 +51,19 @@ This is a single-project web client. All application code lives under `frontend/
 
 ### Foundational implementation
 
-- [X] T006 Implement token store in `frontend/src/api/tokens.ts`: module-scoped `accessToken`, `localStorage`-backed `refreshToken` (key `jb2:refreshToken`), `setTokens`/`clearTokens`/`getAccessToken`/`getRefreshToken` API, and a `window.addEventListener('storage', ...)` handler that re-syncs the in-memory access token when another tab rotates the refresh token.
-- [X] T007 [P] Implement RFC 7807 error mapper in `frontend/src/api/errors.ts`: export `ApiError`, `isApiError`, and `splitValidationDetail(err)` per `contracts/auth.md` and `research.md` §5.
-- [X] T008 [P] Implement JSON-blob helpers and types in `frontend/src/api/jsonBlobs.ts`: `parseJsonBlob<T>` (returns `null` for `"{}"`/`"[]"`/empty), `stringifyJsonBlob<T>`, and the five typed shapes (`PositionSlot`, `StatCategoryWeight`, `DraftOrder`, `LineupCategory`, `SavedSearchFilters`) per `data-model.md` §7. Enforce `filterVersion: 2` on `SavedSearchFilters` serialize.
-- [X] T009 Implement Axios client in `frontend/src/api/client.ts`: base URL from `import.meta.env.VITE_API_BASE_URL`, request interceptor that attaches `Authorization: Bearer ${accessToken}` from T006, response interceptor with single-flight `inFlightRefresh` promise, retry-once logic, RFC 7807 mapping via T007, clear-and-redirect via `react-router` (not `window.location.href`). **Depends on T006, T007.**
-- [X] T010 Wire `@tanstack/react-query` `QueryClientProvider` and `ReactQueryDevtools` in `frontend/src/App.tsx`. Set sensible defaults (`staleTime: 30_000`, `refetchOnWindowFocus: false` for now).
-- [X] T011 [P] Configure MSW: create `frontend/src/test/mswHandlers.ts` with empty default array, `frontend/src/test/mswServer.ts` (Node setup), and update `frontend/src/setupTests.ts` to start/stop the server around the suite.
+- [X] T006 Implement token store in `src/api/tokens.ts`: module-scoped `accessToken`, `localStorage`-backed `refreshToken` (key `jb2:refreshToken`), `setTokens`/`clearTokens`/`getAccessToken`/`getRefreshToken` API, and a `window.addEventListener('storage', ...)` handler that re-syncs the in-memory access token when another tab rotates the refresh token.
+- [X] T007 [P] Implement RFC 7807 error mapper in `src/api/errors.ts`: export `ApiError`, `isApiError`, and `splitValidationDetail(err)` per `contracts/auth.md` and `research.md` §5.
+- [X] T008 [P] Implement JSON-blob helpers and types in `src/api/jsonBlobs.ts`: `parseJsonBlob<T>` (returns `null` for `"{}"`/`"[]"`/empty), `stringifyJsonBlob<T>`, and the five typed shapes (`PositionSlot`, `StatCategoryWeight`, `DraftOrder`, `LineupCategory`, `SavedSearchFilters`) per `data-model.md` §7. Enforce `filterVersion: 2` on `SavedSearchFilters` serialize.
+- [X] T009 Implement Axios client in `src/api/client.ts`: base URL from `import.meta.env.VITE_API_BASE_URL`, request interceptor that attaches `Authorization: Bearer ${accessToken}` from T006, response interceptor with single-flight `inFlightRefresh` promise, retry-once logic, RFC 7807 mapping via T007, clear-and-redirect via `react-router` (not `window.location.href`). **Depends on T006, T007.**
+- [X] T010 Wire `@tanstack/react-query` `QueryClientProvider` and `ReactQueryDevtools` in `src/App.tsx`. Set sensible defaults (`staleTime: 30_000`, `refetchOnWindowFocus: false` for now).
+- [X] T011 [P] Configure MSW: create `src/test/mswHandlers.ts` with empty default array, `src/test/mswServer.ts` (Node setup), and update `src/setupTests.ts` to start/stop the server around the suite.
 
 ### Foundational tests
 
-- [X] T012 [P] Unit tests for token store in `frontend/src/api/tokens.test.ts`: set/clear, localStorage persistence, cross-tab `storage`-event resync.
-- [X] T013 [P] Unit tests for error mapper in `frontend/src/api/errors.test.ts`: `isApiError` type guard, `splitValidationDetail` behavior on multi-error `detail` strings.
-- [X] T014 [P] Unit tests for JSON-blob helpers in `frontend/src/api/jsonBlobs.test.ts`: round-trip the five shapes, `"{}"`/`"[]"` → null, `filterVersion: 2` enforcement (parser rejects, serializer always sets).
-- [X] T015 [P] Unit tests for client interceptor in `frontend/src/api/client.test.ts`: 401 → single-flight refresh + retry-once, 401-after-refresh → clear tokens + redirect, concurrent request coalescing onto a single refresh promise, RFC 7807 → `ApiError`.
+- [X] T012 [P] Unit tests for token store in `src/api/tokens.test.ts`: set/clear, localStorage persistence, cross-tab `storage`-event resync.
+- [X] T013 [P] Unit tests for error mapper in `src/api/errors.test.ts`: `isApiError` type guard, `splitValidationDetail` behavior on multi-error `detail` strings.
+- [X] T014 [P] Unit tests for JSON-blob helpers in `src/api/jsonBlobs.test.ts`: round-trip the five shapes, `"{}"`/`"[]"` → null, `filterVersion: 2` enforcement (parser rejects, serializer always sets).
+- [X] T015 [P] Unit tests for client interceptor in `src/api/client.test.ts`: 401 → single-flight refresh + retry-once, 401-after-refresh → clear tokens + redirect, concurrent request coalescing onto a single refresh promise, RFC 7807 → `ApiError`.
 
 **Checkpoint**: All Phase 2 tasks pass `npm test`. The typed-client foundation is ready; user-story phases may now begin in parallel.
 
@@ -73,26 +73,26 @@ This is a single-project web client. All application code lives under `frontend/
 
 **Goal**: A user can register, log in, remain authenticated across token expirations and page reloads, and log out — all against the JellyBaseballV2 API. No local user database participates.
 
-**Independent Test**: Run `frontend/` against the live API. Register a new account → access a protected route → wait past access-token expiry → trigger a request and observe transparent refresh + retry → reload the page and confirm session persists → log out and confirm protected routes redirect to login. (Quickstart §5.)
+**Independent Test**: Run the dev server (`npm run dev`) against the live API. Register a new account → access a protected route → wait past access-token expiry → trigger a request and observe transparent refresh + retry → reload the page and confirm session persists → log out and confirm protected routes redirect to login. (Quickstart §5.)
 
 ### Implementation for US1
 
-- [X] T016 [US1] Auth API module in `frontend/src/api/auth.ts`: `register`, `login`, `refresh`, `logout`, `getCurrentUser` per `contracts/auth.md`. All functions use the `client` from T009 and import generated types from `types.generated.ts`.
-- [X] T017 [P] [US1] Auth API unit tests in `frontend/src/api/auth.test.ts` (MSW-backed): each endpoint's happy and error paths.
-- [X] T018 [P] [US1] Auth context in `frontend/src/auth/AuthContext.tsx`: `useAuth()` exposing `currentUser`, `signIn(email, password)`, `register(payload)`, `signOut()`, `isLoading`, `isAuthenticated`. On boot, hydrate by calling `refresh` if a refresh token exists.
-- [X] T019 [P] [US1] `ProtectedRoute` component in `frontend/src/auth/ProtectedRoute.tsx`: redirects unauthenticated users to `/login`, preserving the originally requested path via `react-router` state.
-- [X] T020 [P] [US1] `LoginPage` in `frontend/src/auth/LoginPage.tsx` using existing `@react-aria/*` primitives. On success, navigate to the preserved redirect path or `/`.
-- [X] T021 [P] [US1] `RegisterPage` in `frontend/src/auth/RegisterPage.tsx` with client-side password rules (min 8 chars, ≥1 digit) mirroring AUTH.md.
-- [X] T022 [US1] Wire `<AuthProvider>` at the app root in `frontend/src/App.tsx`. **Depends on T010, T018.**
-- [X] T023 [US1] Add `/login` and `/register` routes and wrap existing protected pages in `ProtectedRoute` in `frontend/src/App.tsx` (or wherever the router lives). **Depends on T019, T020, T021, T022.**
-- [X] T024 [US1] Add a logout control to the existing header/menu component (locate via `frontend/src/components/common/`). Calls `signOut()` from `useAuth` and navigates to `/login`.
+- [X] T016 [US1] Auth API module in `src/api/auth.ts`: `register`, `login`, `refresh`, `logout`, `getCurrentUser` per `contracts/auth.md`. All functions use the `client` from T009 and import generated types from `types.generated.ts`.
+- [X] T017 [P] [US1] Auth API unit tests in `src/api/auth.test.ts` (MSW-backed): each endpoint's happy and error paths.
+- [X] T018 [P] [US1] Auth context in `src/auth/AuthContext.tsx`: `useAuth()` exposing `currentUser`, `signIn(email, password)`, `register(payload)`, `signOut()`, `isLoading`, `isAuthenticated`. On boot, hydrate by calling `refresh` if a refresh token exists.
+- [X] T019 [P] [US1] `ProtectedRoute` component in `src/auth/ProtectedRoute.tsx`: redirects unauthenticated users to `/login`, preserving the originally requested path via `react-router` state.
+- [X] T020 [P] [US1] `LoginPage` in `src/auth/LoginPage.tsx` using existing `@react-aria/*` primitives. On success, navigate to the preserved redirect path or `/`.
+- [X] T021 [P] [US1] `RegisterPage` in `src/auth/RegisterPage.tsx` with client-side password rules (min 8 chars, ≥1 digit) mirroring AUTH.md.
+- [X] T022 [US1] Wire `<AuthProvider>` at the app root in `src/App.tsx`. **Depends on T010, T018.**
+- [X] T023 [US1] Add `/login` and `/register` routes and wrap existing protected pages in `ProtectedRoute` in `src/App.tsx` (or wherever the router lives). **Depends on T019, T020, T021, T022.**
+- [X] T024 [US1] Add a logout control to the existing header/menu component (locate via `src/components/common/`). Calls `signOut()` from `useAuth` and navigates to `/login`.
 
 ### Tests for US1
 
-- [X] T025 [P] [US1] `AuthContext` component tests in `frontend/src/auth/AuthContext.test.tsx`: register success, login success, login failure surfaces validation detail, signOut clears tokens, boot hydration uses refresh token.
-- [X] T026 [P] [US1] `ProtectedRoute` tests in `frontend/src/auth/ProtectedRoute.test.tsx`: unauthenticated redirect, authenticated pass-through, redirect-state preservation.
-- [X] T027 [P] [US1] `LoginPage` tests in `frontend/src/auth/LoginPage.test.tsx`: form validation, submit triggers `signIn`, error surfacing.
-- [X] T028 [P] [US1] `RegisterPage` tests in `frontend/src/auth/RegisterPage.test.tsx`: password-rule validation, submit triggers `register`, semicolon-delimited 400 errors render inline.
+- [X] T025 [P] [US1] `AuthContext` component tests in `src/auth/AuthContext.test.tsx`: register success, login success, login failure surfaces validation detail, signOut clears tokens, boot hydration uses refresh token.
+- [X] T026 [P] [US1] `ProtectedRoute` tests in `src/auth/ProtectedRoute.test.tsx`: unauthenticated redirect, authenticated pass-through, redirect-state preservation.
+- [X] T027 [P] [US1] `LoginPage` tests in `src/auth/LoginPage.test.tsx`: form validation, submit triggers `signIn`, error surfacing.
+- [X] T028 [P] [US1] `RegisterPage` tests in `src/auth/RegisterPage.test.tsx`: password-rule validation, submit triggers `register`, semicolon-delimited 400 errors render inline.
 - [ ] T029 [US1] Hand-execute Quickstart §5 against the live API and check off acceptance scenarios in `spec.md` US1 #1–#5.
 
 **Checkpoint**: US1 is fully functional. Auth-protected views from prior branches still load; the legacy `services/api.ts` still backs them but the new auth flow is now driving sessions.
@@ -107,18 +107,18 @@ This is a single-project web client. All application code lives under `frontend/
 
 ### Implementation for US2
 
-- [ ] T030 [US2] Players API module in `frontend/src/api/players.ts`: `searchPlayers`, `getPlayerById`, `getTeams`, `getPositions`, `getPlayerScoreBreakdown` per `contracts/players.md`. Uses generated DTO types and the `client` from T009.
-- [ ] T031 [US2] TanStack Query hooks for players in `frontend/src/features/player-research/hooks/usePlayersQuery.ts` (and sibling hooks for teams/positions/score-breakdown if needed). Use `queryKey` namespacing per resource.
-- [ ] T032 [US2] Migrate `frontend/src/features/player-research/**/*.tsx` to consume the new hooks, replacing imports of `services/api.ts`.
-- [ ] T033 [US2] Migrate `frontend/src/pages/PlayerResearch/**/*.tsx` to consume the new hooks.
-- [ ] T034 [US2] Update `frontend/src/types/player.ts` to re-export aliases of the generated DTOs (or delete if redundant with `types.generated.ts`).
-- [ ] T035 [US2] Implement a global API-error notifier in `frontend/src/components/common/ApiErrorNotifier.tsx`: a toast (rendered via a global notification component, **not** a React error boundary — error boundaries do not catch network errors) that surfaces within 5 seconds when any TanStack Query request fails network-level (no response). For HTTP errors with a response body, render `ApiError.detail` for status 400 (so users see validation messages), but for status 500 render a fixed generic string (e.g., "Something went wrong. Please try again.") and **never** display the API's `detail` payload — per spec FR-014. Mount in `App.tsx`. Applies app-wide; verified by US2's "stop the API" scenario.
+- [ ] T030 [US2] Players API module in `src/api/players.ts`: `searchPlayers`, `getPlayerById`, `getTeams`, `getPositions`, `getPlayerScoreBreakdown` per `contracts/players.md`. Uses generated DTO types and the `client` from T009.
+- [ ] T031 [US2] TanStack Query hooks for players in `src/features/player-research/hooks/usePlayersQuery.ts` (and sibling hooks for teams/positions/score-breakdown if needed). Use `queryKey` namespacing per resource.
+- [ ] T032 [US2] Migrate `src/features/player-research/**/*.tsx` to consume the new hooks, replacing imports of `services/api.ts`.
+- [ ] T033 [US2] Migrate `src/pages/PlayerResearch/**/*.tsx` to consume the new hooks.
+- [ ] T034 [US2] Update `src/types/player.ts` to re-export aliases of the generated DTOs (or delete if redundant with `types.generated.ts`).
+- [ ] T035 [US2] Implement a global API-error notifier in `src/components/common/ApiErrorNotifier.tsx`: a toast (rendered via a global notification component, **not** a React error boundary — error boundaries do not catch network errors) that surfaces within 5 seconds when any TanStack Query request fails network-level (no response). For HTTP errors with a response body, render `ApiError.detail` for status 400 (so users see validation messages), but for status 500 render a fixed generic string (e.g., "Something went wrong. Please try again.") and **never** display the API's `detail` payload — per spec FR-014. Mount in `App.tsx`. Applies app-wide; verified by US2's "stop the API" scenario.
 
 ### Tests for US2
 
-- [ ] T036 [P] [US2] Players API unit tests in `frontend/src/api/players.test.ts` (MSW-backed): each endpoint, query-param serialization (the `paramsSerializer: { indexes: null }` quirk), pagination shape mapping.
-- [ ] T037 [P] [US2] Player-research hooks tests in `frontend/src/features/player-research/hooks/usePlayersQuery.test.ts`: cache key correctness, refetch on filter change.
-- [ ] T038 [P] [US2] Component test for the player-search flow in `frontend/src/features/player-research/__tests__/playerSearch.test.tsx` (MSW-backed): apply filter, change sort, open detail.
+- [ ] T036 [P] [US2] Players API unit tests in `src/api/players.test.ts` (MSW-backed): each endpoint, query-param serialization (the `paramsSerializer: { indexes: null }` quirk), pagination shape mapping.
+- [ ] T037 [P] [US2] Player-research hooks tests in `src/features/player-research/hooks/usePlayersQuery.test.ts`: cache key correctness, refetch on filter change.
+- [ ] T038 [P] [US2] Component test for the player-search flow in `src/features/player-research/__tests__/playerSearch.test.tsx` (MSW-backed): apply filter, change sort, open detail.
 - [ ] T039 [US2] Hand-execute Quickstart §6 acceptance scenarios in `spec.md` US2 #1–#4 (including the "stop the API" 5-second-error edge case).
 
 **Checkpoint**: Player research runs end-to-end against the API. Legacy `services/api.ts` may still exist if other features import it (cleaned up in US3 / US4).
@@ -133,22 +133,22 @@ This is a single-project web client. All application code lives under `frontend/
 
 ### Implementation for US3
 
-- [ ] T040 [US3] Leagues API module in `frontend/src/api/leagues.ts` per `contracts/leagues.md` (leagues, members, invitations, settings, draft control). Required because lineups are league-scoped.
-- [ ] T041 [P] [US3] Teams API module in `frontend/src/api/teams.ts` per `contracts/lineups.md`: dashboard (authoritative `currentWeek`), roster, lineup get/set, free-agent add.
-- [ ] T042 [P] [US3] Scoring configs API module in `frontend/src/api/scoringConfigs.ts` per `contracts/scoring-configs.md`. Uses `parseJsonBlob`/`stringifyJsonBlob` for `categoriesJson`.
-- [ ] T043 [P] [US3] Saved searches API module in `frontend/src/api/savedSearches.ts` per `contracts/saved-searches.md`. Always sets `filterVersion: 2` on serialize; rejects on parse otherwise.
-- [ ] T044 [US3] TanStack Query hooks for scoring configs, lineups, and saved searches in `frontend/src/hooks/` (one file per resource: `useScoringConfigs.ts`, `useLineup.ts`, `useSavedSearches.ts`).
-- [ ] T045 [US3] Migrate `frontend/src/pages/ScoringConfigs/**/*.tsx` to consume the new API module via the hooks from T044.
-- [ ] T046 [US3] Migrate `frontend/src/pages/Lineups/**/*.tsx` to consume the new API module via the hooks from T044. Replace any imports of `frontend/src/services/lineupService.ts`.
-- [ ] T047 [US3] Add or migrate saved-searches UI in player research: "Save current filter" button + "Saved searches" list with apply / delete affordances (delete only if API exposes it; otherwise hide). File(s): `frontend/src/features/player-research/SavedSearches.tsx` and integration into the existing filter bar.
-- [ ] T048 [US3] Delete `frontend/src/services/lineupService.ts` once nothing imports it.
+- [ ] T040 [US3] Leagues API module in `src/api/leagues.ts` per `contracts/leagues.md` (leagues, members, invitations, settings, draft control). Required because lineups are league-scoped.
+- [ ] T041 [P] [US3] Teams API module in `src/api/teams.ts` per `contracts/lineups.md`: dashboard (authoritative `currentWeek`), roster, lineup get/set, free-agent add.
+- [ ] T042 [P] [US3] Scoring configs API module in `src/api/scoringConfigs.ts` per `contracts/scoring-configs.md`. Uses `parseJsonBlob`/`stringifyJsonBlob` for `categoriesJson`.
+- [ ] T043 [P] [US3] Saved searches API module in `src/api/savedSearches.ts` per `contracts/saved-searches.md`. Always sets `filterVersion: 2` on serialize; rejects on parse otherwise.
+- [ ] T044 [US3] TanStack Query hooks for scoring configs, lineups, and saved searches in `src/hooks/` (one file per resource: `useScoringConfigs.ts`, `useLineup.ts`, `useSavedSearches.ts`).
+- [ ] T045 [US3] Migrate `src/pages/ScoringConfigs/**/*.tsx` to consume the new API module via the hooks from T044.
+- [ ] T046 [US3] Migrate `src/pages/Lineups/**/*.tsx` to consume the new API module via the hooks from T044. Replace any imports of `src/services/lineupService.ts`.
+- [ ] T047 [US3] Add or migrate saved-searches UI in player research: "Save current filter" button + "Saved searches" list with apply / delete affordances (delete only if API exposes it; otherwise hide). File(s): `src/features/player-research/SavedSearches.tsx` and integration into the existing filter bar.
+- [ ] T048 [US3] Delete `src/services/lineupService.ts` once nothing imports it.
 
 ### Tests for US3
 
-- [ ] T049 [P] [US3] Saved searches API tests in `frontend/src/api/savedSearches.test.ts`: round-trip with `filterVersion: 2`, parser rejection of missing/wrong version, 400 error surfacing.
-- [ ] T050 [P] [US3] Scoring configs API tests in `frontend/src/api/scoringConfigs.test.ts`: list, create, detail, `categoriesJson` round-trip.
-- [ ] T051 [P] [US3] Leagues + teams API tests in `frontend/src/api/leagues.test.ts` and `frontend/src/api/teams.test.ts`: settings reads, lineup get/set, locked-slot edit blocked, free-agent-add full-roster 400 surfacing.
-- [ ] T052 [P] [US3] Hooks tests in `frontend/src/hooks/useScoringConfigs.test.ts`, `useLineup.test.ts`, `useSavedSearches.test.ts` (MSW-backed).
+- [ ] T049 [P] [US3] Saved searches API tests in `src/api/savedSearches.test.ts`: round-trip with `filterVersion: 2`, parser rejection of missing/wrong version, 400 error surfacing.
+- [ ] T050 [P] [US3] Scoring configs API tests in `src/api/scoringConfigs.test.ts`: list, create, detail, `categoriesJson` round-trip.
+- [ ] T051 [P] [US3] Leagues + teams API tests in `src/api/leagues.test.ts` and `src/api/teams.test.ts`: settings reads, lineup get/set, locked-slot edit blocked, free-agent-add full-roster 400 surfacing.
+- [ ] T052 [P] [US3] Hooks tests in `src/hooks/useScoringConfigs.test.ts`, `useLineup.test.ts`, `useSavedSearches.test.ts` (MSW-backed).
 - [ ] T053 [US3] Hand-execute Quickstart §7 acceptance scenarios in `spec.md` US3 #1–#4.
 
 **Checkpoint**: All read and write paths run against the API. The legacy backend is no longer reached by any code path even though it still exists in the tree.
@@ -168,11 +168,11 @@ This is a single-project web client. All application code lives under `frontend/
 - [X] T056 [US4] Update or delete `DOCKER.md` at the repository root to reflect the new architecture (web client only) — point developers at the JellyBaseballV2 README for API setup.
 - [ ] T057 [US4] Audit `infrastructure/` and remove any files that provisioned Postgres or the local NestJS backend. Keep only what serves the web client (e.g., nginx config, deployment scripts).
 - [ ] T058 [US4] Update repository-root `README.md` to describe the new architecture (web client + external API) and link to `specs/003-jellybaseballv2-api-migration/quickstart.md` for setup.
-- [ ] T059 [US4] Delete `frontend/src/services/api.ts` and `frontend/src/services/lineupService.ts` if not already deleted in earlier phases. Delete `frontend/src/services/` if empty.
+- [ ] T059 [US4] Delete `src/services/api.ts` and `src/services/lineupService.ts` if not already deleted in earlier phases. Delete `src/services/` if empty.
 - [ ] T060 [US4] Repo-wide grep verification per Quickstart §8. Run from the repo root and confirm zero matches: `prisma`, `@nestjs`, `5432`, `postgres` (excluding mentions inside `specs/`, `JellyBaseballV2/` references, and `node_modules/`).
 - [ ] T061 [US4] Hand-execute Quickstart §8 acceptance scenarios in `spec.md` US4 #1–#4.
 
-**Checkpoint**: A clean checkout, with only the JellyBaseballV2 API running locally, can build and run `frontend/` end-to-end.
+**Checkpoint**: A clean checkout, with only the JellyBaseballV2 API running locally, can build and run `` end-to-end.
 
 ---
 
@@ -180,8 +180,8 @@ This is a single-project web client. All application code lives under `frontend/
 
 **Purpose**: Quality and consistency improvements that touch multiple user stories.
 
-- [ ] T062 [P] Add an ESLint rule (or convention note in `frontend/README.md`) forbidding direct `axios` or `fetch` usage outside `frontend/src/api/` to prevent re-introducing a parallel client.
-- [ ] T063 [P] Update `frontend/README.md` with the new architecture, env-var setup, and `gen:types` step.
+- [ ] T062 [P] Add an ESLint rule (or convention note in `README.md`) forbidding direct `axios` or `fetch` usage outside `src/api/` to prevent re-introducing a parallel client.
+- [ ] T063 [P] Update `README.md` with the new architecture, env-var setup, and `gen:types` step.
 - [ ] T064 Run the full Vitest suite (`cd frontend && npm test`) and confirm green.
 - [ ] T065 Run end-to-end Quickstart §1–§9 against the live API and confirm all acceptance scenarios pass.
 - [ ] T066 Audit the repo for UI flows touching API capabilities documented as missing or no-op in `JellyBaseballV2/docs/web-client/KNOWN-GAPS.md`, per `spec.md` FR-017. For each item below, confirm the UI is either absent, omitted, read-only, or correctly substituted; record the finding. Expected baseline: none of these UIs exist in the current repo, so the audit should confirm absence rather than gating. If any interactive flow against a missing endpoint is found, file a follow-up task to omit or gate it before merge.
@@ -191,7 +191,7 @@ This is a single-project web client. All application code lives under `frontend/
   - Player news feed rendering (no-op news service; news section omitted).
   - Display of non-self user names (only `teamName` is resolvable for other members).
   - Display of commissioner's name on the league page (only "You are the commissioner" badge for self).
-- [ ] T067 [P] Run automated accessibility checks against the new auth screens to verify constitution §I (Accessibility first / WCAG). Add `vitest-axe` (or `axe-core` directly) as a dev dependency, write component tests at `frontend/src/auth/LoginPage.a11y.test.tsx` and `frontend/src/auth/RegisterPage.a11y.test.tsx` that render each page and assert zero critical or serious axe violations. Resolve any findings by adjusting the components, not by softening the assertions.
+- [ ] T067 [P] Run automated accessibility checks against the new auth screens to verify constitution §I (Accessibility first / WCAG). Add `vitest-axe` (or `axe-core` directly) as a dev dependency, write component tests at `src/auth/LoginPage.a11y.test.tsx` and `src/auth/RegisterPage.a11y.test.tsx` that render each page and assert zero critical or serious axe violations. Resolve any findings by adjusting the components, not by softening the assertions.
 - [ ] T068 Update auto-memory pointer (in `~/.claude/projects/.../memory/`) to mark feature 003 as implementation-complete and ready for review.
 
 ---
@@ -210,7 +210,7 @@ This is a single-project web client. All application code lives under `frontend/
 - **US1 (P1, MVP)**: Independent. Required in practice for any human to test US2/US3 against a live API, but the *infrastructure* needed by US2/US3 is in Phase 2 (Foundational), so they are technically not blocked.
 - **US2 (P2)**: Independent. Can be built against MSW-mocked auth without US1 complete.
 - **US3 (P3)**: Independent. Can be built against MSW-mocked auth without US1 complete.
-- **US4 (P4)**: Sequentially last. Deletes the legacy code that earlier stories may still incidentally reference. Should follow once US1–US3 no longer import from `frontend/src/services/`.
+- **US4 (P4)**: Sequentially last. Deletes the legacy code that earlier stories may still incidentally reference. Should follow once US1–US3 no longer import from `src/services/`.
 
 ### Within Each User Story
 
@@ -233,11 +233,11 @@ This is a single-project web client. All application code lives under `frontend/
 
 ```text
 # Independent files — launch in parallel:
-Task: "T017 Auth API unit tests in frontend/src/api/auth.test.ts"
-Task: "T018 AuthContext in frontend/src/auth/AuthContext.tsx"
-Task: "T019 ProtectedRoute in frontend/src/auth/ProtectedRoute.tsx"
-Task: "T020 LoginPage in frontend/src/auth/LoginPage.tsx"
-Task: "T021 RegisterPage in frontend/src/auth/RegisterPage.tsx"
+Task: "T017 Auth API unit tests in src/api/auth.test.ts"
+Task: "T018 AuthContext in src/auth/AuthContext.tsx"
+Task: "T019 ProtectedRoute in src/auth/ProtectedRoute.tsx"
+Task: "T020 LoginPage in src/auth/LoginPage.tsx"
+Task: "T021 RegisterPage in src/auth/RegisterPage.tsx"
 ```
 
 `T016` (auth API module) and `T022`/`T023`/`T024` (App wiring + routes + logout button) are sequential anchors.
@@ -280,4 +280,4 @@ After Phase 2 lands:
 - Each user story is independently completable and testable per the spec's acceptance criteria.
 - All hand-execute Quickstart tasks (T029, T039, T053, T061, T065) require the live JellyBaseballV2 API on `http://localhost:5000`.
 - Commit at each task or logical group. Stop at any checkpoint to demo or merge.
-- Avoid: re-introducing `axios`/`fetch` outside `frontend/src/api/`; touching `types.generated.ts` by hand; coupling US2/US3 page code to `services/api.ts` (those imports must end up in `src/api/`).
+- Avoid: re-introducing `axios`/`fetch` outside `src/api/`; touching `types.generated.ts` by hand; coupling US2/US3 page code to `services/api.ts` (those imports must end up in `src/api/`).

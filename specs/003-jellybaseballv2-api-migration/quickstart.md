@@ -36,7 +36,7 @@ Expected: a JSON body starting with `{"openapi":...`.
 
 ## 2. Configure the web client
 
-In `frontend/`, create `.env.development.local` (gitignored):
+In ``, create `.env.development.local` (gitignored):
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000
@@ -48,7 +48,7 @@ Confirm the API's CORS allowlist includes the dev server origin (`http://localho
 
 ## 3. Generate types
 
-From `frontend/`:
+From ``:
 
 ```bash
 npm install
@@ -126,7 +126,7 @@ All checks should pass. The web client should still run end-to-end with **only**
 
 ## 9. Run the test suite
 
-From `frontend/`:
+From ``:
 
 ```bash
 npm test                # vitest run

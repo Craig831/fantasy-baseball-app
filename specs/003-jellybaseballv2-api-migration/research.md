@@ -4,7 +4,7 @@
 **Date**: 2026-05-07
 **Status**: Phase 0 complete
 
-This document resolves the unknowns that surfaced from the spec and the Technical Context in `plan.md`. Every decision is backed by either the API documentation at `/mnt/c/Users/craig/source/repos/JellyBaseballV2/docs/web-client/` or the existing dependencies already in `frontend/package.json`.
+This document resolves the unknowns that surfaced from the spec and the Technical Context in `plan.md`. Every decision is backed by either the API documentation at `/mnt/c/Users/craig/source/repos/JellyBaseballV2/docs/web-client/` or the existing dependencies already in `package.json`.
 
 ---
 
@@ -37,7 +37,7 @@ This document resolves the unknowns that surfaced from the spec and the Technica
 
 ## 3. TypeScript DTO generation
 
-**Decision**: Use `openapi-typescript` (dev dependency in `frontend/`). Generated file is committed at `frontend/src/api/types.generated.ts`. Regenerate by running `npx openapi-typescript http://localhost:5000/swagger/v1/swagger.json --output src/api/types.generated.ts` from `frontend/` while the API is running. Add an npm script `gen:types` to make this discoverable.
+**Decision**: Use `openapi-typescript` (dev dependency in `package.json`). Generated file is committed at `src/api/types.generated.ts`. Regenerate by running `npx openapi-typescript http://localhost:5000/swagger/v1/swagger.json --output src/api/types.generated.ts` from the repo root while the API is running. Add an npm script `gen:types` to make this discoverable.
 
 **Rationale**: KNOWN-GAPS.md explicitly recommends `openapi-typescript` and provides the exact command. The package outputs a single self-contained `.d.ts`-style file with `paths` and `components.schemas`. We import generated types as `components['schemas']['SomeDto']` or alias them in our hand-written client modules.
 
@@ -52,7 +52,7 @@ This document resolves the unknowns that surfaced from the spec and the Technica
 
 **Decision**: Continue using **Axios** (already a dependency) for the underlying HTTP layer. Continue using **TanStack Query 5** (already installed) for server-state caching, deduplication, and refetching. Wrap each API endpoint in a thin function returning `Promise<T>`, then expose a TanStack Query hook per resource (e.g., `usePlayer(id)`, `useUpdateLineup()`).
 
-**Rationale**: Both libraries are already in `frontend/package.json` but TanStack Query is not yet wired up across the app. Using both is a low-friction path: Axios handles interceptors and base config; TanStack Query handles caching, polling intervals (for the API's known real-time gap), and optimistic updates.
+**Rationale**: Both libraries are already in `package.json` but TanStack Query is not yet wired up across the app. Using both is a low-friction path: Axios handles interceptors and base config; TanStack Query handles caching, polling intervals (for the API's known real-time gap), and optimistic updates.
 
 **Alternatives considered**:
 - *`fetch` directly*: Loses the interceptor pattern; would need a custom wrapper that re-implements what Axios provides.

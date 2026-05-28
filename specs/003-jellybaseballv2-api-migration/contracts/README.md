@@ -1,6 +1,6 @@
 # API Contracts
 
-The web client consumes the JellyBaseballV2 ASP.NET Core API. The authoritative contract is the API's OpenAPI document at `http://localhost:5000/swagger/v1/swagger.json`. The TypeScript projection of that document is generated into `frontend/src/api/types.generated.ts` via `openapi-typescript` and is the canonical source of shapes for client code.
+The web client consumes the JellyBaseballV2 ASP.NET Core API. The authoritative contract is the API's OpenAPI document at `http://localhost:5000/swagger/v1/swagger.json`. The TypeScript projection of that document is generated into `src/api/types.generated.ts` via `openapi-typescript` and is the canonical source of shapes for client code.
 
 The files in this directory document **the subset of the API the web client depends on for this branch**, organized by feature area. Each file lists:
 

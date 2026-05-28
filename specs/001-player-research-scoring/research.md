@@ -49,7 +49,7 @@ This document captures research findings, technology choices, and architectural 
 
 **Rationale**:
 - **React 18**: Concurrent rendering enables better mobile performance (SC-012 target)
-- **TypeScript**: Type safety across frontend/backend boundary using shared types
+- **TypeScript**: Type safety across backend boundary using shared types
 - **TailwindCSS**: Mobile-first utilities, rapid prototyping, consistent design system (constitution principle I)
 - **TanStack Query**: Server state management, automatic caching, optimistic updates for lineup editing
 - **Accessibility**: React Testing Library enforces accessible patterns, supports WCAG 2.1 Level AA

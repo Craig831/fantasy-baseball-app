@@ -5,7 +5,7 @@
 
 ## Summary
 
-Replace the local NestJS+Prisma+Postgres backend with a typed client against the external JellyBaseballV2 ASP.NET Core API. The web app in `frontend/` becomes the only application code in this repository. Auth (register/login/refresh/logout) is delegated to the API via JWT, with access tokens held in memory and refresh tokens in `localStorage`; an Axios response interceptor performs single-flight refresh-and-retry on `401`. TypeScript DTOs are generated from the API's OpenAPI spec (`/swagger/v1/swagger.json`) and consumed through a thin client layer organized by feature area. Five opaque JSON-string fields on the API are parsed and serialized at the boundary using documented shapes. Server state is cached with TanStack Query (already a dependency). The `backend/`, Prisma artifacts, Postgres service in container orchestration, and related infrastructure are removed entirely.
+Replace the local NestJS+Prisma+Postgres backend with a typed client against the external JellyBaseballV2 ASP.NET Core API. The web app in `` becomes the only application code in this repository. Auth (register/login/refresh/logout) is delegated to the API via JWT, with access tokens held in memory and refresh tokens in `localStorage`; an Axios response interceptor performs single-flight refresh-and-retry on `401`. TypeScript DTOs are generated from the API's OpenAPI spec (`/swagger/v1/swagger.json`) and consumed through a thin client layer organized by feature area. Five opaque JSON-string fields on the API are parsed and serialized at the boundary using documented shapes. Server state is cached with TanStack Query (already a dependency). The `backend/`, Prisma artifacts, Postgres service in container orchestration, and related infrastructure are removed entirely.
 
 ## Technical Context
 
@@ -14,7 +14,7 @@ Replace the local NestJS+Prisma+Postgres backend with a typed client against the
 **Storage**: Browser only — access token in module-scoped memory, refresh token in `localStorage`. No application database in this repository.
 **Testing**: Vitest 4 + Testing Library + jsdom for unit and component tests. MSW (Mock Service Worker) for HTTP mocks at the typed-client boundary; introduce as a new dev dependency.
 **Target Platform**: Modern evergreen browsers (last two versions of Chrome, Firefox, Safari, Edge). Mobile-first per constitution.
-**Project Type**: Web frontend only (single project at `frontend/`).
+**Project Type**: Web frontend only (single project at ``).
 **Performance Goals**: Cache reads aggressively via TanStack Query so repeated player-research interactions hit memory rather than the network. Initial app shell time-to-interactive within current Vite-dev baseline. No regression-comparison against the legacy backend is performed — that backend is being deleted in this branch.
 **Constraints**: API unreachable on startup must surface a clear error within 5 seconds (FR-012). Refresh-token rotation must be single-flight across concurrent requests and across browser tabs. Mobile-first responsive UI. WCAG-conformant input flows (continue using `@react-aria/*`).
 **Scale/Scope**: ~40 DTOs across auth, leagues, members, invitations, draft, teams, rosters, lineups, players, scoring-configs, saved-searches, waivers, trades. Single-tenant fantasy app.
@@ -91,7 +91,7 @@ specs/003-jellybaseballv2-api-migration/
 ### Source Code (repository root)
 
 ```text
-frontend/
+
 ├── src/
 │   ├── api/                          # NEW
 │   │   ├── client.ts                 # Axios instance, interceptors, single-flight refresh
@@ -133,7 +133,7 @@ frontend/
 # DOCKER.md                           (rewritten or deleted; refer to JellyBaseballV2 docs)
 ```
 
-**Structure Decision**: The repository becomes a single-project web client at `frontend/`. A new `src/api/` module is the only place that talks to the external API; all hooks and components consume it via TanStack Query. A new `src/auth/` module owns sign-in flows and route protection. The legacy `src/services/` content is migrated into `src/api/` and deleted. `frontend/` stays at its current path for this branch; relocation to repo root is out of scope.
+**Structure Decision**: The repository becomes a single-project web client at the repo root. A new `src/api/` module is the only place that talks to the external API; all hooks and components consume it via TanStack Query. A new `src/auth/` module owns sign-in flows and route protection. The legacy `src/services/` content is migrated into `src/api/` and deleted. The former `frontend/` subdirectory has been relocated to the repo root (done as part of this branch).
 
 ## Complexity Tracking
 

@@ -2,7 +2,7 @@
 
 **Feature**: 003-jellybaseballv2-api-migration
 **Date**: 2026-05-07
-**Source of truth**: The external API's OpenAPI document at `/swagger/v1/swagger.json`. The TypeScript types in `frontend/src/api/types.generated.ts` are the canonical client-side shapes — this document is a human-readable index.
+**Source of truth**: The external API's OpenAPI document at `/swagger/v1/swagger.json`. The TypeScript types in `src/api/types.generated.ts` are the canonical client-side shapes — this document is a human-readable index.
 
 This repository does **not** own any database schema. All entities below are owned by the JellyBaseballV2 API; the web client only reads and writes them through the documented endpoints.
 

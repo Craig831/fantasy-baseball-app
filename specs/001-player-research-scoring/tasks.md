@@ -45,7 +45,7 @@ This document provides a dependency-ordered task breakdown for implementing the 
 **Tasks** (18 total):
 
 - [X] T001 Initialize NestJS backend project in backend/ directory using `nest new backend --package-manager npm`
-- [X] T002 Initialize React frontend project in frontend/ directory using `create-react-app frontend --template typescript`
+- [X] T002 Initialize React frontend project in  directory using `create-react-app frontend --template typescript`
 - [X] T003 [P] Create backend/src/config/ directory and add database.config.ts for Prisma configuration
 - [X] T004 [P] Create backend/src/config/jwt.config.ts for JWT secret and expiration settings
 - [X] T005 [P] Create backend/src/config/app.config.ts for application-level configuration
@@ -54,12 +54,12 @@ This document provides a dependency-ordered task breakdown for implementing the 
 - [X] T008 Initialize Prisma in backend/ using `npx prisma init`
 - [X] T009 Create backend/prisma/schema.prisma with datasource and generator configuration
 - [X] T010 [P] Install frontend dependencies: `axios`, `@tanstack/react-query`, `react-router-dom`, `tailwindcss`
-- [X] T011 [P] Initialize TailwindCSS in frontend/ using `npx tailwindcss init -p`
-- [X] T012 [P] Configure TailwindCSS in frontend/tailwind.config.js with mobile-first breakpoints
-- [X] T013 Create frontend/src/services/api.ts with Axios client and JWT interceptors
+- [X] T011 [P] Initialize TailwindCSS in  using `npx tailwindcss init -p`
+- [X] T012 [P] Configure TailwindCSS in tailwind.config.js with mobile-first breakpoints
+- [X] T013 Create src/services/api.ts with Axios client and JWT interceptors
 - [X] T014 Create docker-compose.yml in project root with PostgreSQL 15, Redis, backend, and frontend services
 - [X] T015 Create backend/Dockerfile for NestJS application
-- [X] T016 [P] Create frontend/Dockerfile for React application
+- [X] T016 [P] Create Dockerfile for React application
 - [X] T017 [P] Create infrastructure/nginx.conf for reverse proxy configuration
 - [X] T018 Create README.md with setup instructions, development commands, and architecture overview
 
@@ -81,8 +81,8 @@ This document provides a dependency-ordered task breakdown for implementing the 
 - [X] T026 Create backend/src/core/exceptions.ts with 40+ custom exception classes (Auth, User, Scoring, Player, Lineup, Validation)
 - [X] T027 Run initial Prisma migration: `npx prisma migrate dev --name init`
 - [X] T028 Create backend/prisma/seed.ts with test data (10 users, 30 teams, 100 MLB players, sample configs, statistics)
-- [X] T029 Create frontend/src/utils/validation.ts with form validation helpers (email, password strength, scoring config, lineup name)
-- [X] T030 Create frontend/src/utils/accessibility.ts with ARIA helper functions for WCAG 2.1 AA compliance (focus trapping, contrast checking)
+- [X] T029 Create src/utils/validation.ts with form validation helpers (email, password strength, scoring config, lineup name)
+- [X] T030 Create src/utils/accessibility.ts with ARIA helper functions for WCAG 2.1 AA compliance (focus trapping, contrast checking)
 
 ---
 
@@ -159,10 +159,10 @@ This document provides a dependency-ordered task breakdown for implementing the 
 - [X] T070 [US2] Create backend/src/modules/scoring/scoring.controller.ts with routes: GET /scoring-configs, POST /scoring-configs, GET /scoring-configs/:id, PATCH /scoring-configs/:id, DELETE /scoring-configs/:id, PATCH /scoring-configs/:id/activate
 - [X] T071 [US2] Add @UseGuards(JwtAuthGuard) to all scoring.controller.ts routes
 - [X] T072 [US2] Add Swagger/OpenAPI decorators to scoring.controller.ts
-- [X] T073 [US2] Create frontend/src/components/scoring/ScoringConfigForm.tsx with baseball stat category inputs (batting: hits, doubles, triples, homeRuns, etc.; pitching: wins, strikeouts, saves, etc.)
-- [X] T074 [US2] Create frontend/src/components/scoring/ScoringConfigList.tsx with list, activate, edit, delete actions
-- [X] T075 [US2] Create frontend/src/pages/ScoringPage.tsx integrating ScoringConfigForm and ScoringConfigList (as frontend/src/pages/ScoringConfigs/)
-- [X] T076 [US2] Create frontend/src/services/scoringService.ts with API calls for all scoring config operations (in api.ts)
+- [X] T073 [US2] Create src/components/scoring/ScoringConfigForm.tsx with baseball stat category inputs (batting: hits, doubles, triples, homeRuns, etc.; pitching: wins, strikeouts, saves, etc.)
+- [X] T074 [US2] Create src/components/scoring/ScoringConfigList.tsx with list, activate, edit, delete actions
+- [X] T075 [US2] Create src/pages/ScoringPage.tsx integrating ScoringConfigForm and ScoringConfigList (as src/pages/ScoringConfigs/)
+- [X] T076 [US2] Create src/services/scoringService.ts with API calls for all scoring config operations (in api.ts)
 
 ---
 
@@ -197,12 +197,12 @@ This document provides a dependency-ordered task breakdown for implementing the 
 
 ### Frontend: Player Research
 
-- [X] T093 [US3] Create frontend/src/components/players/PlayerSearch.tsx with search input and debouncing (300ms) (integrated in PlayerResearch.tsx)
-- [X] T094 [US3] Create frontend/src/components/players/PlayerFilters.tsx with team, position dropdowns (as FilterPanel.tsx)
-- [X] T095 [US3] Create frontend/src/components/players/PlayerTable.tsx with react-window virtualization for 1000+ rows (as PlayerList.tsx)
-- [X] T096 [US3] Create frontend/src/components/players/PlayerDetail.tsx with statistics, scoring breakdown, recent games (as ScoreBreakdownModal.tsx)
-- [X] T097 [US3] Create frontend/src/pages/PlayersPage.tsx integrating PlayerSearch, PlayerFilters, and PlayerTable (as PlayerResearch.tsx)
-- [X] T098 [US3] Create frontend/src/services/playerService.ts with API calls for player search, detail, statistics (in api.ts)
+- [X] T093 [US3] Create src/components/players/PlayerSearch.tsx with search input and debouncing (300ms) (integrated in PlayerResearch.tsx)
+- [X] T094 [US3] Create src/components/players/PlayerFilters.tsx with team, position dropdowns (as FilterPanel.tsx)
+- [X] T095 [US3] Create src/components/players/PlayerTable.tsx with react-window virtualization for 1000+ rows (as PlayerList.tsx)
+- [X] T096 [US3] Create src/components/players/PlayerDetail.tsx with statistics, scoring breakdown, recent games (as ScoreBreakdownModal.tsx)
+- [X] T097 [US3] Create src/pages/PlayersPage.tsx integrating PlayerSearch, PlayerFilters, and PlayerTable (as PlayerResearch.tsx)
+- [X] T098 [US3] Create src/services/playerService.ts with API calls for player search, detail, statistics (in api.ts)
 
 **Note**: This phase was implemented as Feature 002 (Player Research). See specs/002-player-research/ for detailed implementation.
 
@@ -238,13 +238,13 @@ This document provides a dependency-ordered task breakdown for implementing the 
 
 ### Frontend: Lineup Management
 
-- [X] T114 [US4] Create frontend/src/components/lineups/LineupEditor.tsx with flexible slot list (max 25) and player assignment interface
-- [X] T115 [US4] Create frontend/src/components/lineups/LineupSlot.tsx component displaying slot order, assigned player (with position), and projected score
-- [X] T116 [US4] Create frontend/src/components/lineups/LineupList.tsx with list of user's lineups, actions (open, edit, duplicate, delete)
-- [X] T117 [US4] Create frontend/src/components/lineups/LineupScore.tsx displaying total projected score and player count
-- [X] T118 [US4] Create frontend/src/pages/LineupsPage.tsx integrating LineupList
-- [X] T119 [US4] Create frontend/src/pages/LineupEditorPage.tsx integrating LineupEditor, LineupSlot, and LineupScore
-- [X] T120 [US4] Create frontend/src/services/lineupService.ts with API calls for all lineup operations
+- [X] T114 [US4] Create src/components/lineups/LineupEditor.tsx with flexible slot list (max 25) and player assignment interface
+- [X] T115 [US4] Create src/components/lineups/LineupSlot.tsx component displaying slot order, assigned player (with position), and projected score
+- [X] T116 [US4] Create src/components/lineups/LineupList.tsx with list of user's lineups, actions (open, edit, duplicate, delete)
+- [X] T117 [US4] Create src/components/lineups/LineupScore.tsx displaying total projected score and player count
+- [X] T118 [US4] Create src/pages/LineupsPage.tsx integrating LineupList
+- [X] T119 [US4] Create src/pages/LineupEditorPage.tsx integrating LineupEditor, LineupSlot, and LineupScore
+- [X] T120 [US4] Create src/services/lineupService.ts with API calls for all lineup operations
 - [ ] T121 [US4] Implement optimistic updates in LineupEditor.tsx using TanStack Query's useMutation (PENDING: Enhancement for better UX)
 - [ ] T122 [US4] Add UI logic in LineupEditor.tsx to disable "Add Player" when lineup has 25 players (with optional "Lineup full (25/25)" message) and prevent duplicate player selection (PARTIALLY IMPLEMENTED: Validation logic exists, needs polish)
 
@@ -283,15 +283,15 @@ This document provides a dependency-ordered task breakdown for implementing the 
 
 - [ ] T131 [US5] Review and refactor all components to use TailwindCSS mobile-first breakpoints (sm:, md:, lg:)
 - [ ] T132 [US5] Ensure touch targets ≥ 44x44px in all interactive elements (buttons, links, inputs)
-- [ ] T133 [US5] Implement mobile navigation in frontend/src/components/layout/Navigation.tsx with hamburger menu
+- [ ] T133 [US5] Implement mobile navigation in src/components/layout/Navigation.tsx with hamburger menu
 - [ ] T134 [US5] Add swipe gesture support in LineupEditor.tsx for player management on mobile
 - [ ] T135 [US5] Implement lazy loading for all route components using React.lazy() and Suspense
-- [ ] T136 [US5] Add loading spinners in frontend/src/components/common/Spinner.tsx with ARIA labels
+- [ ] T136 [US5] Add loading spinners in src/components/common/Spinner.tsx with ARIA labels
 - [ ] T137 [US5] Optimize images: convert to WebP, add responsive srcset attributes
-- [ ] T138 [US5] Add preload hints for critical fonts and CSS in frontend/public/index.html
+- [ ] T138 [US5] Add preload hints for critical fonts and CSS in public/index.html
 - [ ] T139 [US5] Add ARIA labels to all form inputs, buttons, and interactive elements
 - [ ] T140 [US5] Implement keyboard navigation support with visible focus indicators
-- [ ] T141 [US5] Add skip navigation link in frontend/src/components/layout/Header.tsx for keyboard users
+- [ ] T141 [US5] Add skip navigation link in src/components/layout/Header.tsx for keyboard users
 - [ ] T142 [US5] Run Lighthouse audit on all pages targeting performance ≥90, accessibility ≥95
 - [ ] T143 [US5] Fix any Lighthouse issues and document performance metrics
 
@@ -318,9 +318,9 @@ This document provides a dependency-ordered task breakdown for implementing the 
 
 ### Error Handling and Validation
 
-- [ ] T151 Create frontend/src/components/common/ErrorBoundary.tsx with user-friendly error messages
-- [ ] T152 Add global error handling in frontend/src/App.tsx catching network errors
-- [ ] T153 Implement retry logic in frontend/src/services/api.ts for failed requests (exponential backoff)
+- [ ] T151 Create src/components/common/ErrorBoundary.tsx with user-friendly error messages
+- [ ] T152 Add global error handling in src/App.tsx catching network errors
+- [ ] T153 Implement retry logic in src/services/api.ts for failed requests (exponential backoff)
 
 ### Documentation and Deployment
 
