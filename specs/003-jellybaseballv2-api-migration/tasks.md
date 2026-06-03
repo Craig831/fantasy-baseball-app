@@ -111,7 +111,7 @@ This is a single-project web client. All application code lives under `src/`. Ne
 - [X] T031 [US2] TanStack Query hooks for players in `src/features/player-research/hooks/usePlayersQuery.ts` (and sibling hooks for teams/positions/score-breakdown if needed). Use `queryKey` namespacing per resource.
 - [X] T032 [US2] Migrate `src/features/player-research/**/*.tsx` to consume the new hooks, replacing imports of `services/api.ts`.
 - [X] T033 [US2] Migrate `src/pages/PlayerResearch/**/*.tsx` to consume the new hooks.
-- [ ] T034 [US2] Update `src/types/player.ts` to re-export aliases of the generated DTOs (or delete if redundant with `types.generated.ts`).
+- [X] T034 [US2] Update `src/types/player.ts` to re-export aliases of the generated DTOs (or delete if redundant with `types.generated.ts`).
 - [ ] T035 [US2] Implement a global API-error notifier in `src/components/common/ApiErrorNotifier.tsx`: a toast (rendered via a global notification component, **not** a React error boundary — error boundaries do not catch network errors) that surfaces within 5 seconds when any TanStack Query request fails network-level (no response). For HTTP errors with a response body, render `ApiError.detail` for status 400 (so users see validation messages), but for status 500 render a fixed generic string (e.g., "Something went wrong. Please try again.") and **never** display the API's `detail` payload — per spec FR-014. Mount in `App.tsx`. Applies app-wide; verified by US2's "stop the API" scenario.
 
 ### Tests for US2

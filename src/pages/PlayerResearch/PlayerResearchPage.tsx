@@ -5,7 +5,6 @@ import ScoringConfigSelector from '../../components/player-research/ScoringConfi
 import ScoreBreakdownModal from '../../components/player-research/ScoreBreakdownModal';
 import type { ScoringConfig, PlayerResult } from '../../features/player-research/types/player-result';
 import { usePlayersQuery, usePlayerScoreBreakdownQuery } from '../../features/player-research/hooks/usePlayersQuery';
-import type { Player } from '../../types/player';
 import type { PlayerSearchParams, PlayerSummaryDto } from '../../api/types';
 import './PlayerResearch.css';
 
@@ -78,11 +77,11 @@ const PlayerResearch: React.FC = () => {
     setQueryParams(prev => ({ ...prev, sortBy: field, sortOrder: direction, pageNumber: 1 }));
   };
 
-  const handlePlayerClick = (_player: Player | PlayerResult) => {
+  const handlePlayerClick = (_player: PlayerResult) => {
     // Future: navigate to player detail page
   };
 
-  const handleScoreClick = (player: Player | PlayerResult) => {
+  const handleScoreClick = (player: PlayerResult) => {
     if (!scoringConfigId) return;
     setSelectedMlbPlayerId(player.mlbPlayerId);
     setSelectedPlayerName(player.name);

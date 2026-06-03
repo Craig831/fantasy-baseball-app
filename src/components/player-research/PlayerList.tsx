@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { Player } from '../../types/player';
 import {
   PlayerResult,
   ColumnConfig,
@@ -9,7 +8,7 @@ import {
 import './PlayerList.css';
 
 interface PlayerListProps {
-  players: Player[] | PlayerResult[];
+  players: PlayerResult[];
   loading: boolean;
   error: string | null;
   pagination: {
@@ -20,14 +19,13 @@ interface PlayerListProps {
     hasMore: boolean;
   } | null;
   onPageChange: (page: number) => void;
-  onPlayerClick?: (player: Player | PlayerResult) => void;
-  onScoreClick?: (player: Player | PlayerResult) => void;
+  onPlayerClick?: (player: PlayerResult) => void;
+  onScoreClick?: (player: PlayerResult) => void;
   onSortChange?: (field: string, direction: 'asc' | 'desc') => void;
   statisticType: 'hitting' | 'pitching';
   scoringConfig?: ScoringConfig | null;
 }
 
-type SortField = 'name' | 'team' | 'position' | 'score';
 type SortDirection = 'asc' | 'desc';
 
 const PlayerList: React.FC<PlayerListProps> = ({
@@ -45,138 +43,68 @@ const PlayerList: React.FC<PlayerListProps> = ({
   const [sortField, setSortField] = useState<string>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
-  // Calculate visible columns based on statistic type and scoring config
   const visibleColumns = useMemo(() => {
     return getVisibleColumns(statisticType, scoringConfig);
   }, [statisticType, scoringConfig]);
 
   const handleSort = (field: string) => {
-    let newDirection: SortDirection;
-
-    if (sortField === field) {
-      newDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      newDirection = 'asc';
-    }
-
+    const newDirection: SortDirection =
+      sortField === field && sortDirection === 'asc' ? 'desc' : 'asc';
     setSortField(field);
     setSortDirection(newDirection);
-
-    // Trigger server-side sort if handler provided
-    if (onSortChange) {
-      onSortChange(field, newDirection);
-    }
+    onSortChange?.(field, newDirection);
   };
 
-  // Helper function to render cell content based on column configuration
-  const renderCell = (player: Player | PlayerResult, col: ColumnConfig) => {
-    const isPlayerResult = 'totalPoints' in player;
-
-    if (col.key === 'playerName') {
-      return player.name;
-    }
-
-    if (col.key === 'position') {
-      return player.position;
-    }
-
-    if (col.key === 'teamAbbr') {
-      if (isPlayerResult) {
-        return (player as PlayerResult).teamAbbr;
-      }
-      return (player as Player).team?.abbreviation || (player as Player).team?.name || '--';
-    }
+  const renderCell = (player: PlayerResult, col: ColumnConfig) => {
+    if (col.key === 'playerName') return player.name;
+    if (col.key === 'position') return player.position;
+    if (col.key === 'teamAbbr') return player.teamAbbr;
 
     if (col.key === 'totalPoints') {
-      if (isPlayerResult) {
-        const totalPoints = (player as PlayerResult).totalPoints;
-        return totalPoints !== null ? (
-          <button
-            className="score-button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onScoreClick?.(player);
-            }}
-            title="Click for score breakdown"
-          >
-            {totalPoints.toFixed(1)}
-          </button>
-        ) : '--';
-      }
-      return (player as Player).score !== undefined ? (player as Player).score?.toFixed(1) : '--';
+      return player.totalPoints !== null ? (
+        <button
+          className="score-button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onScoreClick?.(player);
+          }}
+          title="Click for score breakdown"
+        >
+          {player.totalPoints.toFixed(1)}
+        </button>
+      ) : '--';
     }
 
     if (col.key === 'pointsPerGame') {
-      if (isPlayerResult) {
-        const ppg = (player as PlayerResult).pointsPerGame;
-        return ppg !== null ? ppg.toFixed(2) : '--';
-      }
-      return '--';
+      return player.pointsPerGame !== null ? player.pointsPerGame.toFixed(2) : '--';
     }
 
-    // Handle statistic columns
-    if (col.statKey && isPlayerResult) {
-      const stats = (player as PlayerResult).statistics;
-      if (stats && stats[col.statKey] !== undefined) {
-        return stats[col.statKey];
-      }
-      return '--';
+    if (col.statKey) {
+      const val = player.statistics?.[col.statKey];
+      return val !== undefined ? val : '--';
     }
 
     return '--';
   };
 
   const sortedPlayers = [...players].sort((a, b) => {
-    let aValue: string | number = '';
-    let bValue: string | number = '';
+    let aVal: string | number = '';
+    let bVal: string | number = '';
 
-    // Handle legacy sorting fields
     switch (sortField) {
-      case 'name':
-        aValue = a.name;
-        bValue = b.name;
-        break;
-      case 'team':
-        if ('teamAbbr' in a) {
-          aValue = (a as PlayerResult).teamAbbr || '';
-          bValue = (b as PlayerResult).teamAbbr || '';
-        } else {
-          aValue = (a as Player).team?.name || '';
-          bValue = (b as Player).team?.name || '';
-        }
-        break;
-      case 'position':
-        aValue = a.position;
-        bValue = b.position;
-        break;
-      case 'score':
-        if ('totalPoints' in a) {
-          aValue = (a as PlayerResult).totalPoints || 0;
-          bValue = (b as PlayerResult).totalPoints || 0;
-        } else {
-          aValue = (a as Player).score || 0;
-          bValue = (b as Player).score || 0;
-        }
-        break;
+      case 'name':       aVal = a.name;     bVal = b.name;     break;
+      case 'team':       aVal = a.teamAbbr; bVal = b.teamAbbr; break;
+      case 'position':   aVal = a.position; bVal = b.position; break;
+      case 'score':      aVal = a.totalPoints ?? 0; bVal = b.totalPoints ?? 0; break;
       default:
-        // Handle dynamic column sorting
-        if ('statistics' in a && 'statistics' in a) {
-          const aStats = (a as PlayerResult).statistics;
-          const bStats = (b as PlayerResult).statistics;
-          aValue = aStats?.[sortField] || 0;
-          bValue = bStats?.[sortField] || 0;
-        }
+        aVal = a.statistics?.[sortField] ?? 0;
+        bVal = b.statistics?.[sortField] ?? 0;
     }
 
-    if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return sortDirection === 'asc'
-        ? aValue.localeCompare(bValue)
-        : bValue.localeCompare(aValue);
-    } else {
-      return sortDirection === 'asc'
-        ? (aValue as number) - (bValue as number)
-        : (bValue as number) - (aValue as number);
+    if (typeof aVal === 'string') {
+      return sortDirection === 'asc' ? aVal.localeCompare(bVal as string) : (bVal as string).localeCompare(aVal);
     }
+    return sortDirection === 'asc' ? (aVal as number) - (bVal as number) : (bVal as number) - (aVal as number);
   });
 
   if (loading) {
