@@ -27,3 +27,75 @@ export interface UserProfileDto {
   lastName?: string | null;
   avatarUrl?: string | null;
 }
+
+// ── Player domain ─────────────────────────────────────────────────────────────
+
+export interface TeamSummaryDto {
+  mlbTeamId: number;
+  name: string;
+  abbreviation: string;
+}
+
+export interface PositionDto {
+  positionId: number;
+  name: string;
+  abbreviation: string;
+}
+
+export interface PlayerSummaryDto {
+  mlbPlayerId: number;
+  fullName: string;
+  primaryPosition: string;
+  mlbTeam?: TeamSummaryDto | null;
+  status: string;
+  jellyScore?: number | null;
+}
+
+export interface PlayerProfileDto {
+  mlbPlayerId: number;
+  fullName: string;
+  primaryPosition: string;
+  mlbTeam?: TeamSummaryDto | null;
+  status: string;
+  birthDate?: string | null;
+  height?: string | null;
+  weight?: number | null;
+  news: unknown[];
+}
+
+export interface PagedResult<T> {
+  items: T[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface PlayerSearchParams {
+  nameQuery?: string;
+  positionId?: number;
+  mlbTeamId?: number;
+  statusCode?: string;
+  availability?: 'All' | 'FreeAgent' | 'Owned';
+  leagueId?: number;
+  pageNumber?: number;
+  pageSize?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+export interface ScoreCategoryDto {
+  name: string;
+  statValue: number;
+  weight: number;
+  points: number;
+}
+
+export interface ScoreBreakdownDto {
+  mlbPlayerId: number;
+  scoringConfigId: string;
+  totalScore: number;
+  categories: ScoreCategoryDto[];
+}

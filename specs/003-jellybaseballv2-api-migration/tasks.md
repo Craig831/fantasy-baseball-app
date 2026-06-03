@@ -93,7 +93,7 @@ This is a single-project web client. All application code lives under `src/`. Ne
 - [X] T026 [P] [US1] `ProtectedRoute` tests in `src/auth/ProtectedRoute.test.tsx`: unauthenticated redirect, authenticated pass-through, redirect-state preservation.
 - [X] T027 [P] [US1] `LoginPage` tests in `src/auth/LoginPage.test.tsx`: form validation, submit triggers `signIn`, error surfacing.
 - [X] T028 [P] [US1] `RegisterPage` tests in `src/auth/RegisterPage.test.tsx`: password-rule validation, submit triggers `register`, semicolon-delimited 400 errors render inline.
-- [ ] T029 [US1] Hand-execute Quickstart §5 against the live API and check off acceptance scenarios in `spec.md` US1 #1–#5.
+- [X] T029 [US1] Hand-execute Quickstart §5 against the live API and check off acceptance scenarios in `spec.md` US1 #1–#5.
 
 **Checkpoint**: US1 is fully functional. Auth-protected views from prior branches still load; the legacy `services/api.ts` still backs them but the new auth flow is now driving sessions.
 
@@ -107,7 +107,7 @@ This is a single-project web client. All application code lives under `src/`. Ne
 
 ### Implementation for US2
 
-- [ ] T030 [US2] Players API module in `src/api/players.ts`: `searchPlayers`, `getPlayerById`, `getTeams`, `getPositions`, `getPlayerScoreBreakdown` per `contracts/players.md`. Uses generated DTO types and the `client` from T009.
+- [X] T030 [US2] Players API module in `src/api/players.ts`: `searchPlayers`, `getPlayerById`, `getTeams`, `getPositions`, `getPlayerScoreBreakdown` per `contracts/players.md`. Uses generated DTO types and the `client` from T009.
 - [ ] T031 [US2] TanStack Query hooks for players in `src/features/player-research/hooks/usePlayersQuery.ts` (and sibling hooks for teams/positions/score-breakdown if needed). Use `queryKey` namespacing per resource.
 - [ ] T032 [US2] Migrate `src/features/player-research/**/*.tsx` to consume the new hooks, replacing imports of `services/api.ts`.
 - [ ] T033 [US2] Migrate `src/pages/PlayerResearch/**/*.tsx` to consume the new hooks.
