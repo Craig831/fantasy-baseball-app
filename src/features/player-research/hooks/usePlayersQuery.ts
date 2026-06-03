@@ -63,6 +63,6 @@ export function usePlayerScoreBreakdownQuery(
   return useQuery({
     queryKey: playersKeys.scoreBreakdown(mlbPlayerId, scoringConfigId ?? ''),
     queryFn: () => getPlayerScoreBreakdown(mlbPlayerId, scoringConfigId!),
-    enabled: scoringConfigId !== undefined && scoringConfigId !== '',
+    enabled: mlbPlayerId !== 0 && scoringConfigId !== undefined && scoringConfigId !== '',
   });
 }

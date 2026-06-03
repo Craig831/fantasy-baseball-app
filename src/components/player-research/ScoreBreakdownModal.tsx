@@ -1,9 +1,9 @@
 import React from 'react';
-import { ScoreBreakdown } from '../../types/player';
+import type { ScoreBreakdownDto } from '../../api/types';
 import './ScoreBreakdownModal.css';
 
 interface ScoreBreakdownModalProps {
-  breakdown: ScoreBreakdown | null;
+  breakdown: ScoreBreakdownDto | null;
   playerName: string;
   onClose: () => void;
 }
@@ -37,10 +37,6 @@ const ScoreBreakdownModal: React.FC<ScoreBreakdownModalProps> = ({
             <span className="total-value">{breakdown.totalScore.toFixed(1)}</span>
           </div>
 
-          <div className="stat-type-badge">
-            {breakdown.statisticType === 'hitting' ? 'Hitting Stats' : 'Pitching Stats'}
-          </div>
-
           <div className="categories-section">
             <h4>Category Breakdown</h4>
             <div className="categories-table">
@@ -50,9 +46,9 @@ const ScoreBreakdownModal: React.FC<ScoreBreakdownModalProps> = ({
                 <span>Weight</span>
                 <span>Points</span>
               </div>
-              {breakdown.categoryScores.map((category, index) => (
+              {breakdown.categories.map((category, index) => (
                 <div key={index} className="table-row">
-                  <span className="category-name">{category.categoryName}</span>
+                  <span className="category-name">{category.name}</span>
                   <span className="stat-value">{category.statValue}</span>
                   <span className="weight-value">×{category.weight.toFixed(1)}</span>
                   <span className="points-value">{category.points.toFixed(1)}</span>
