@@ -108,7 +108,7 @@ This is a single-project web client. All application code lives under `src/`. Ne
 ### Implementation for US2
 
 - [X] T030 [US2] Players API module in `src/api/players.ts`: `searchPlayers`, `getPlayerById`, `getTeams`, `getPositions`, `getPlayerScoreBreakdown` per `contracts/players.md`. Uses generated DTO types and the `client` from T009.
-- [ ] T031 [US2] TanStack Query hooks for players in `src/features/player-research/hooks/usePlayersQuery.ts` (and sibling hooks for teams/positions/score-breakdown if needed). Use `queryKey` namespacing per resource.
+- [X] T031 [US2] TanStack Query hooks for players in `src/features/player-research/hooks/usePlayersQuery.ts` (and sibling hooks for teams/positions/score-breakdown if needed). Use `queryKey` namespacing per resource.
 - [ ] T032 [US2] Migrate `src/features/player-research/**/*.tsx` to consume the new hooks, replacing imports of `services/api.ts`.
 - [ ] T033 [US2] Migrate `src/pages/PlayerResearch/**/*.tsx` to consume the new hooks.
 - [ ] T034 [US2] Update `src/types/player.ts` to re-export aliases of the generated DTOs (or delete if redundant with `types.generated.ts`).
