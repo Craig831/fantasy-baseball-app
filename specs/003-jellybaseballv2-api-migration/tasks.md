@@ -116,8 +116,8 @@ This is a single-project web client. All application code lives under `src/`. Ne
 
 ### Tests for US2
 
-- [ ] T036 [P] [US2] Players API unit tests in `src/api/players.test.ts` (MSW-backed): each endpoint, query-param serialization (the `paramsSerializer: { indexes: null }` quirk), pagination shape mapping.
-- [ ] T037 [P] [US2] Player-research hooks tests in `src/features/player-research/hooks/usePlayersQuery.test.ts`: cache key correctness, refetch on filter change.
+- [X] T036 [P] [US2] Players API unit tests in `src/api/players.test.ts` (MSW-backed): each endpoint, query-param serialization (the `paramsSerializer: { indexes: null }` quirk), pagination shape mapping.
+- [X] T037 [P] [US2] Player-research hooks tests in `src/features/player-research/hooks/usePlayersQuery.test.ts`: cache key correctness, refetch on filter change.
 - [ ] T038 [P] [US2] Component test for the player-search flow in `src/features/player-research/__tests__/playerSearch.test.tsx` (MSW-backed): apply filter, change sort, open detail.
 - [ ] T039 [US2] Hand-execute Quickstart §6 acceptance scenarios in `spec.md` US2 #1–#4 (including the "stop the API" 5-second-error edge case).
 
