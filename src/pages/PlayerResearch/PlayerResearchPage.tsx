@@ -56,7 +56,12 @@ const PlayerResearch: React.FC = () => {
 
   const handleConfigChange = (configId: string | null) => {
     setScoringConfigId(configId);
-    if (!configId) setScoringConfig(null);
+    // Provide a minimal ScoringConfig so PlayerList shows the score column.
+    // The API already calculates jellyScore on the summary; we don't need
+    // category weights here — empty categories simply suppress stat-column filtering.
+    setScoringConfig(
+      configId ? { id: configId, name: '', categories: { hitting: {}, pitching: {} } } : null,
+    );
   };
 
   const handleFilterChange = (newFilters: any) => {

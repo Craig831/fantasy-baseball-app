@@ -178,8 +178,8 @@ describe('usePlayersQuery', () => {
 
     // Same content, new object — TanStack Query serializes to JSON so cache hits
     rerender({ p: { pageNumber: 1, pageSize: 50 } });
-    await waitFor(() => expect(result => result).toBeTruthy()); // give it a tick
-    expect(callCount).toBe(1);
+    // Let any potential re-fetch settle
+    await waitFor(() => expect(callCount).toBe(1));
   });
 
   it('exposes error state on failure', async () => {
