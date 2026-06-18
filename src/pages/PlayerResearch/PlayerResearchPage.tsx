@@ -3,9 +3,11 @@ import FilterPanel from '../../components/player-research/FilterPanel';
 import PlayerList from '../../components/player-research/PlayerList';
 import ScoringConfigSelector from '../../components/player-research/ScoringConfigSelector';
 import ScoreBreakdownModal from '../../components/player-research/ScoreBreakdownModal';
+import SavedSearches from '../../features/player-research/SavedSearches';
 import type { ScoringConfig, PlayerResult } from '../../features/player-research/types/player-result';
 import { usePlayersQuery, usePlayerScoreBreakdownQuery } from '../../features/player-research/hooks/usePlayersQuery';
 import type { PlayerSearchParams, PlayerSummaryDto } from '../../api/types';
+import type { SavedSearchFilters } from '../../api/jsonBlobs';
 import './PlayerResearch.css';
 
 function toPlayerResult(dto: PlayerSummaryDto): PlayerResult {
@@ -73,6 +75,18 @@ const PlayerResearch: React.FC = () => {
     }));
   };
 
+  const handleApplySavedSearch = (filters: Omit<SavedSearchFilters, 'filterVersion'>) => {
+    setQueryParams(prev => ({
+      ...prev,
+      pageNumber: 1,
+      nameQuery: filters.nameQuery ?? undefined,
+      positionId: filters.positionId ?? undefined,
+      mlbTeamId: filters.mlbTeamId ?? undefined,
+      statusCode: filters.statusCode ?? undefined,
+      availability: filters.availability ?? undefined,
+    }));
+  };
+
   const handlePageChange = (page: number) => {
     setQueryParams(prev => ({ ...prev, pageNumber: page }));
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -121,7 +135,10 @@ const PlayerResearch: React.FC = () => {
         )}
 
         <div className="page-content">
-          <FilterPanel onFiltersApplied={handleFilterChange} />
+          <div>
+            <FilterPanel onFiltersApplied={handleFilterChange} />
+            <SavedSearches currentParams={queryParams} onApply={handleApplySavedSearch} />
+          </div>
 
           <PlayerList
             players={players}

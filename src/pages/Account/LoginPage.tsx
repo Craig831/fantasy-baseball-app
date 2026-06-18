@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
+import { login } from '../../api/auth';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -15,15 +15,10 @@ const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/auth/login', { email, password });
-      const { accessToken, refreshToken } = response.data.data;
-
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-
+      await login({ email, password });
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.errors?.[0]?.message || 'Login failed');
+      setError(err.detail || err.message || 'Login failed');
     } finally {
       setLoading(false);
     }

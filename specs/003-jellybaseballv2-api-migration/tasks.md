@@ -133,22 +133,22 @@ This is a single-project web client. All application code lives under `src/`. Ne
 
 ### Implementation for US3
 
-- [ ] T040 [US3] Leagues API module in `src/api/leagues.ts` per `contracts/leagues.md` (leagues, members, invitations, settings, draft control). Required because lineups are league-scoped.
-- [ ] T041 [P] [US3] Teams API module in `src/api/teams.ts` per `contracts/lineups.md`: dashboard (authoritative `currentWeek`), roster, lineup get/set, free-agent add.
-- [ ] T042 [P] [US3] Scoring configs API module in `src/api/scoringConfigs.ts` per `contracts/scoring-configs.md`. Uses `parseJsonBlob`/`stringifyJsonBlob` for `categoriesJson`.
-- [ ] T043 [P] [US3] Saved searches API module in `src/api/savedSearches.ts` per `contracts/saved-searches.md`. Always sets `filterVersion: 2` on serialize; rejects on parse otherwise.
-- [ ] T044 [US3] TanStack Query hooks for scoring configs, lineups, and saved searches in `src/hooks/` (one file per resource: `useScoringConfigs.ts`, `useLineup.ts`, `useSavedSearches.ts`).
-- [ ] T045 [US3] Migrate `src/pages/ScoringConfigs/**/*.tsx` to consume the new API module via the hooks from T044.
-- [ ] T046 [US3] Migrate `src/pages/Lineups/**/*.tsx` to consume the new API module via the hooks from T044. Replace any imports of `src/services/lineupService.ts`.
-- [ ] T047 [US3] Add or migrate saved-searches UI in player research: "Save current filter" button + "Saved searches" list with apply / delete affordances (delete only if API exposes it; otherwise hide). File(s): `src/features/player-research/SavedSearches.tsx` and integration into the existing filter bar.
-- [ ] T048 [US3] Delete `src/services/lineupService.ts` once nothing imports it.
+- [X] T040 [US3] Leagues API module in `src/api/leagues.ts` per `contracts/leagues.md` (leagues, members, invitations, settings, draft control). Required because lineups are league-scoped.
+- [X] T041 [P] [US3] Teams API module in `src/api/teams.ts` per `contracts/lineups.md`: dashboard (authoritative `currentWeek`), roster, lineup get/set, free-agent add.
+- [X] T042 [P] [US3] Scoring configs API module in `src/api/scoringConfigs.ts` per `contracts/scoring-configs.md`. Uses `parseJsonBlob`/`stringifyJsonBlob` for `categoriesJson`.
+- [X] T043 [P] [US3] Saved searches API module in `src/api/savedSearches.ts` per `contracts/saved-searches.md`. Always sets `filterVersion: 2` on serialize; rejects on parse otherwise.
+- [X] T044 [US3] TanStack Query hooks for scoring configs, lineups, and saved searches in `src/hooks/` (one file per resource: `useScoringConfigs.ts`, `useLineup.ts`, `useSavedSearches.ts`).
+- [X] T045 [US3] Migrate `src/pages/ScoringConfigs/**/*.tsx` to consume the new API module via the hooks from T044.
+- [X] T046 [US3] Migrate `src/pages/Lineups/**/*.tsx` to consume the new API module via the hooks from T044. Replace any imports of `src/services/lineupService.ts`.
+- [X] T047 [US3] Add or migrate saved-searches UI in player research: "Save current filter" button + "Saved searches" list with apply / delete affordances (delete only if API exposes it; otherwise hide). File(s): `src/features/player-research/SavedSearches.tsx` and integration into the existing filter bar.
+- [X] T048 [US3] Delete `src/services/lineupService.ts` once nothing imports it.
 
 ### Tests for US3
 
-- [ ] T049 [P] [US3] Saved searches API tests in `src/api/savedSearches.test.ts`: round-trip with `filterVersion: 2`, parser rejection of missing/wrong version, 400 error surfacing.
-- [ ] T050 [P] [US3] Scoring configs API tests in `src/api/scoringConfigs.test.ts`: list, create, detail, `categoriesJson` round-trip.
-- [ ] T051 [P] [US3] Leagues + teams API tests in `src/api/leagues.test.ts` and `src/api/teams.test.ts`: settings reads, lineup get/set, locked-slot edit blocked, free-agent-add full-roster 400 surfacing.
-- [ ] T052 [P] [US3] Hooks tests in `src/hooks/useScoringConfigs.test.ts`, `useLineup.test.ts`, `useSavedSearches.test.ts` (MSW-backed).
+- [X] T049 [P] [US3] Saved searches API tests in `src/api/savedSearches.test.ts`: round-trip with `filterVersion: 2`, parser rejection of missing/wrong version, 400 error surfacing.
+- [X] T050 [P] [US3] Scoring configs API tests in `src/api/scoringConfigs.test.ts`: list, create, detail, `categoriesJson` round-trip.
+- [X] T051 [P] [US3] Leagues + teams API tests in `src/api/leagues.test.ts` and `src/api/teams.test.ts`: settings reads, lineup get/set, locked-slot edit blocked, free-agent-add full-roster 400 surfacing.
+- [X] T052 [P] [US3] Hooks tests in `src/hooks/useScoringConfigs.test.ts`, `useLineup.test.ts`, `useSavedSearches.test.ts` (MSW-backed).
 - [ ] T053 [US3] Hand-execute Quickstart §7 acceptance scenarios in `spec.md` US3 #1–#4.
 
 **Checkpoint**: All read and write paths run against the API. The legacy backend is no longer reached by any code path even though it still exists in the tree.
@@ -166,10 +166,10 @@ This is a single-project web client. All application code lives under `src/`. Ne
 - [X] T054 [US4] Delete the `backend/` directory in its entirety from the repository root (NestJS app, Prisma schema, all migrations including the untracked `backend/prisma/migrations/20260421195202_add_teams_and_fix_players/`, `backend/prisma.config.ts`, tests, `Dockerfile`, `eslint.config.mjs`, `package.json`, `README.md`).
 - [X] T055 [US4] Update `docker-compose.yml`: remove the `backend` and `postgres` services; if no meaningful services remain (e.g., only the frontend served via `nginx`), delete the file outright.
 - [X] T056 [US4] Update or delete `DOCKER.md` at the repository root to reflect the new architecture (web client only) — point developers at the JellyBaseballV2 README for API setup.
-- [ ] T057 [US4] Audit `infrastructure/` and remove any files that provisioned Postgres or the local NestJS backend. Keep only what serves the web client (e.g., nginx config, deployment scripts).
-- [ ] T058 [US4] Update repository-root `README.md` to describe the new architecture (web client + external API) and link to `specs/003-jellybaseballv2-api-migration/quickstart.md` for setup.
-- [ ] T059 [US4] Delete `src/services/api.ts` and `src/services/lineupService.ts` if not already deleted in earlier phases. Delete `src/services/` if empty.
-- [ ] T060 [US4] Repo-wide grep verification per Quickstart §8. Run from the repo root and confirm zero matches: `prisma`, `@nestjs`, `5432`, `postgres` (excluding mentions inside `specs/`, `JellyBaseballV2/` references, and `node_modules/`).
+- [X] T057 [US4] Audit `infrastructure/` and remove any files that provisioned Postgres or the local NestJS backend. Keep only what serves the web client (e.g., nginx config, deployment scripts).
+- [X] T058 [US4] Update repository-root `README.md` to describe the new architecture (web client + external API) and link to `specs/003-jellybaseballv2-api-migration/quickstart.md` for setup.
+- [X] T059 [US4] Delete `src/services/api.ts` and `src/services/lineupService.ts` if not already deleted in earlier phases. Delete `src/services/` if empty.
+- [X] T060 [US4] Repo-wide grep verification per Quickstart §8. Run from the repo root and confirm zero matches: `prisma`, `@nestjs`, `5432`, `postgres` (excluding mentions inside `specs/`, `JellyBaseballV2/` references, and `node_modules/`).
 - [ ] T061 [US4] Hand-execute Quickstart §8 acceptance scenarios in `spec.md` US4 #1–#4.
 
 **Checkpoint**: A clean checkout, with only the JellyBaseballV2 API running locally, can build and run `` end-to-end.
@@ -180,19 +180,19 @@ This is a single-project web client. All application code lives under `src/`. Ne
 
 **Purpose**: Quality and consistency improvements that touch multiple user stories.
 
-- [ ] T062 [P] Add an ESLint rule (or convention note in `README.md`) forbidding direct `axios` or `fetch` usage outside `src/api/` to prevent re-introducing a parallel client.
-- [ ] T063 [P] Update `README.md` with the new architecture, env-var setup, and `gen:types` step.
-- [ ] T064 Run the full Vitest suite (`cd frontend && npm test`) and confirm green.
+- [X] T062 [P] Add an ESLint rule (or convention note in `README.md`) forbidding direct `axios` or `fetch` usage outside `src/api/` to prevent re-introducing a parallel client.
+- [X] T063 [P] Update `README.md` with the new architecture, env-var setup, and `gen:types` step.
+- [X] T064 Run the full Vitest suite (`cd frontend && npm test`) and confirm green.
 - [ ] T065 Run end-to-end Quickstart §1–§9 against the live API and confirm all acceptance scenarios pass.
-- [ ] T066 Audit the repo for UI flows touching API capabilities documented as missing or no-op in `JellyBaseballV2/docs/web-client/KNOWN-GAPS.md`, per `spec.md` FR-017. For each item below, confirm the UI is either absent, omitted, read-only, or correctly substituted; record the finding. Expected baseline: none of these UIs exist in the current repo, so the audit should confirm absence rather than gating. If any interactive flow against a missing endpoint is found, file a follow-up task to omit or gate it before merge.
+- [X] T066 Audit the repo for UI flows touching API capabilities documented as missing or no-op in `JellyBaseballV2/docs/web-client/KNOWN-GAPS.md`, per `spec.md` FR-017. For each item below, confirm the UI is either absent, omitted, read-only, or correctly substituted; record the finding. Expected baseline: none of these UIs exist in the current repo, so the audit should confirm absence rather than gating. If any interactive flow against a missing endpoint is found, file a follow-up task to omit or gate it before merge.
   - Draft pick submission (no `POST /api/leagues/{id}/draft/pick` endpoint).
   - Real-time push expectations for drafts, waivers, or trades (polling only).
   - Email-based league invitations sent from the app (no-op email service; share-link UI only).
   - Player news feed rendering (no-op news service; news section omitted).
   - Display of non-self user names (only `teamName` is resolvable for other members).
   - Display of commissioner's name on the league page (only "You are the commissioner" badge for self).
-- [ ] T067 [P] Run automated accessibility checks against the new auth screens to verify constitution §I (Accessibility first / WCAG). Add `vitest-axe` (or `axe-core` directly) as a dev dependency, write component tests at `src/auth/LoginPage.a11y.test.tsx` and `src/auth/RegisterPage.a11y.test.tsx` that render each page and assert zero critical or serious axe violations. Resolve any findings by adjusting the components, not by softening the assertions.
-- [ ] T068 Update auto-memory pointer (in `~/.claude/projects/.../memory/`) to mark feature 003 as implementation-complete and ready for review.
+- [X] T067 [P] Run automated accessibility checks against the new auth screens to verify constitution §I (Accessibility first / WCAG). Add `vitest-axe` (or `axe-core` directly) as a dev dependency, write component tests at `src/auth/LoginPage.a11y.test.tsx` and `src/auth/RegisterPage.a11y.test.tsx` that render each page and assert zero critical or serious axe violations. Resolve any findings by adjusting the components, not by softening the assertions.
+- [X] T068 Update auto-memory pointer (in `~/.claude/projects/.../memory/`) to mark feature 003 as implementation-complete and ready for review.
 
 ---
 

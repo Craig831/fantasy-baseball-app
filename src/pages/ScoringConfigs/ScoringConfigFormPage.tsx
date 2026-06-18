@@ -1,199 +1,115 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import api from '../../services/api';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useCreateScoringConfigMutation } from '../../hooks/useScoringConfigs';
+import { isApiError } from '../../api/errors';
+import { stringifyJsonBlob } from '../../api/jsonBlobs';
+import type { StatCategoryWeight } from '../../api/jsonBlobs';
 
 interface StatEntry {
-  name: string;
-  points: number;
+  statKey: string;
+  pointValue: number;
 }
+
+const DEFAULT_STATS: StatEntry[] = [
+  { statKey: 'HR', pointValue: 4 },
+  { statKey: 'RBI', pointValue: 1 },
+  { statKey: 'R', pointValue: 1 },
+  { statKey: 'SB', pointValue: 2 },
+  { statKey: 'AVG', pointValue: 3 },
+  { statKey: 'W', pointValue: 5 },
+  { statKey: 'SV', pointValue: 5 },
+  { statKey: 'K', pointValue: 1 },
+  { statKey: 'ERA', pointValue: -2 },
+];
 
 const ScoringConfigFormPage: React.FC = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const isEditMode = Boolean(id);
+  const createMutation = useCreateScoringConfigMutation();
 
   const [name, setName] = useState('');
-  const [isActive, setIsActive] = useState(false);
-  const [hittingStats, setHittingStats] = useState<StatEntry[]>([
-    { name: 'hits', points: 1 },
-    { name: 'doubles', points: 2 },
-    { name: 'triples', points: 3 },
-    { name: 'homeRuns', points: 4 },
-    { name: 'rbis', points: 1 },
-    { name: 'runs', points: 1 },
-    { name: 'stolenBases', points: 2 },
-  ]);
-  const [pitchingStats, setPitchingStats] = useState<StatEntry[]>([
-    { name: 'wins', points: 5 },
-    { name: 'saves', points: 5 },
-    { name: 'strikeouts', points: 1 },
-    { name: 'inningsPitched', points: 3 },
-    { name: 'earnedRuns', points: -2 },
-  ]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [stats, setStats] = useState<StatEntry[]>(DEFAULT_STATS);
+  const [formError, setFormError] = useState('');
 
-  useEffect(() => {
-    if (isEditMode && id) {
-      fetchConfig(id);
-    }
-  }, [id, isEditMode]);
+  const addStat = () => {
+    setStats([...stats, { statKey: '', pointValue: 0 }]);
+  };
 
-  const fetchConfig = async (configId: string) => {
-    try {
-      setLoading(true);
-      const response = await api.get(`/scoring-configs/${configId}`);
-      const config = response.data.data;
+  const removeStat = (index: number) => {
+    setStats(stats.filter((_, i) => i !== index));
+  };
 
-      setName(config.name);
-      setIsActive(config.isActive);
-
-      // Convert categories object to array format
-      const hittingEntries = Object.entries(config.categories.hitting).map(([name, points]) => ({
-        name,
-        points: points as number,
-      }));
-      const pitchingEntries = Object.entries(config.categories.pitching).map(([name, points]) => ({
-        name,
-        points: points as number,
-      }));
-
-      setHittingStats(hittingEntries);
-      setPitchingStats(pitchingEntries);
-      setLoading(false);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load configuration');
-      setLoading(false);
-    }
+  const updateStat = (index: number, field: keyof StatEntry, value: string | number) => {
+    const next = [...stats];
+    next[index] = { ...next[index], [field]: value };
+    setStats(next);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setFormError('');
 
     if (!name.trim()) {
-      setError('Configuration name is required');
+      setFormError('Configuration name is required');
       return;
     }
 
-    // Convert arrays to objects
-    const categories = {
-      hitting: Object.fromEntries(
-        hittingStats.filter(s => s.name.trim()).map(s => [s.name, s.points])
-      ),
-      pitching: Object.fromEntries(
-        pitchingStats.filter(s => s.name.trim()).map(s => [s.name, s.points])
-      ),
-    };
-
-    try {
-      setLoading(true);
-      if (isEditMode && id) {
-        await api.patch(`/scoring-configs/${id}`, { name, categories });
-      } else {
-        await api.post('/scoring-configs', { name, categories, isActive });
-      }
-      navigate('/scoring-configs');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to save configuration');
-      setLoading(false);
+    const validStats = stats.filter((s) => s.statKey.trim());
+    if (validStats.length === 0) {
+      setFormError('At least one stat category is required');
+      return;
     }
-  };
 
-  const addHittingStat = () => {
-    setHittingStats([...hittingStats, { name: '', points: 0 }]);
-  };
+    const categories: StatCategoryWeight[] = validStats.map((s) => ({
+      statKey: s.statKey.trim(),
+      pointValue: s.pointValue,
+    }));
 
-  const removeHittingStat = (index: number) => {
-    setHittingStats(hittingStats.filter((_, i) => i !== index));
-  };
-
-  const updateHittingStat = (index: number, field: 'name' | 'points', value: string | number) => {
-    const newStats = [...hittingStats];
-    newStats[index] = {
-      ...newStats[index],
-      [field]: value,
-    };
-    setHittingStats(newStats);
-  };
-
-  const addPitchingStat = () => {
-    setPitchingStats([...pitchingStats, { name: '', points: 0 }]);
-  };
-
-  const removePitchingStat = (index: number) => {
-    setPitchingStats(pitchingStats.filter((_, i) => i !== index));
-  };
-
-  const updatePitchingStat = (index: number, field: 'name' | 'points', value: string | number) => {
-    const newStats = [...pitchingStats];
-    newStats[index] = {
-      ...newStats[index],
-      [field]: value,
-    };
-    setPitchingStats(newStats);
-  };
-
-  if (loading && isEditMode) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-gray-600">Loading...</div>
-      </div>
+    createMutation.mutate(
+      { name: name.trim(), categoriesJson: stringifyJsonBlob(categories) },
+      {
+        onSuccess: () => navigate('/scoring-configs'),
+        onError: (err) => {
+          setFormError(
+            isApiError(err) ? err.detail ?? err.title : 'Failed to save configuration',
+          );
+        },
+      },
     );
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          {isEditMode ? 'Edit' : 'Create'} Scoring Configuration
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">Create Scoring Configuration</h2>
 
-        {error && (
+        {formError && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
+            {formError}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="bg-white rounded-lg shadow p-6">
-            <div className="mb-4">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Configuration Name *
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="e.g., My League 2025"
-                required
-              />
-            </div>
-
-            {!isEditMode && (
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="isActive"
-                  checked={isActive}
-                  onChange={(e) => setIsActive(e.target.checked)}
-                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                />
-                <label htmlFor="isActive" className="ml-2 block text-sm text-gray-700">
-                  Set as active configuration
-                </label>
-              </div>
-            )}
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              Configuration Name *
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="e.g., My League 2025"
+              required
+            />
           </div>
 
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">Hitting Stats</h3>
+              <h3 className="text-lg font-medium text-gray-900">Stat Categories</h3>
               <button
                 type="button"
-                onClick={addHittingStat}
+                onClick={addStat}
                 className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded text-sm hover:bg-indigo-200"
               >
                 Add Stat
@@ -201,68 +117,26 @@ const ScoringConfigFormPage: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              {hittingStats.map((stat, index) => (
+              {stats.map((stat, index) => (
                 <div key={index} className="flex gap-2">
                   <input
                     type="text"
-                    value={stat.name}
-                    onChange={(e) => updateHittingStat(index, 'name', e.target.value)}
-                    placeholder="Stat name (e.g., hits)"
+                    value={stat.statKey}
+                    onChange={(e) => updateStat(index, 'statKey', e.target.value)}
+                    placeholder="Stat key (e.g., HR)"
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
                   <input
                     type="number"
                     step="0.1"
-                    value={stat.points}
-                    onChange={(e) => updateHittingStat(index, 'points', parseFloat(e.target.value))}
+                    value={stat.pointValue}
+                    onChange={(e) => updateStat(index, 'pointValue', parseFloat(e.target.value))}
                     placeholder="Points"
                     className="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
                   <button
                     type="button"
-                    onClick={() => removeHittingStat(index)}
-                    className="bg-red-100 text-red-700 px-3 py-2 rounded hover:bg-red-200"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">Pitching Stats</h3>
-              <button
-                type="button"
-                onClick={addPitchingStat}
-                className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded text-sm hover:bg-indigo-200"
-              >
-                Add Stat
-              </button>
-            </div>
-
-            <div className="space-y-2">
-              {pitchingStats.map((stat, index) => (
-                <div key={index} className="flex gap-2">
-                  <input
-                    type="text"
-                    value={stat.name}
-                    onChange={(e) => updatePitchingStat(index, 'name', e.target.value)}
-                    placeholder="Stat name (e.g., strikeouts)"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                  <input
-                    type="number"
-                    step="0.1"
-                    value={stat.points}
-                    onChange={(e) => updatePitchingStat(index, 'points', parseFloat(e.target.value))}
-                    placeholder="Points"
-                    className="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removePitchingStat(index)}
+                    onClick={() => removeStat(index)}
                     className="bg-red-100 text-red-700 px-3 py-2 rounded hover:bg-red-200"
                   >
                     Remove
@@ -282,10 +156,10 @@ const ScoringConfigFormPage: React.FC = () => {
             </button>
             <button
               type="submit"
-              disabled={loading}
+              disabled={createMutation.isPending}
               className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:bg-gray-400"
             >
-              {loading ? 'Saving...' : isEditMode ? 'Update Configuration' : 'Create Configuration'}
+              {createMutation.isPending ? 'Saving...' : 'Create Configuration'}
             </button>
           </div>
         </form>

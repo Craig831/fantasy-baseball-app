@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
+import { forgotPassword } from '../../api/auth';
 
 const ForgotPasswordPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -15,10 +15,10 @@ const ForgotPasswordPage: React.FC = () => {
     setLoading(true);
 
     try {
-      await api.post('/auth/forgot-password', { email });
+      await forgotPassword(email);
       setSuccess(true);
     } catch (err: any) {
-      setError(err.response?.data?.errors?.[0]?.message || 'Failed to send reset email');
+      setError(err.detail || err.message || 'Failed to send reset email');
     } finally {
       setLoading(false);
     }

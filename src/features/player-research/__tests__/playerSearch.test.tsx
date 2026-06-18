@@ -39,9 +39,12 @@ function makePage(items = [makePlayer()]) {
 
 // Scoring-configs with no configs (avoids unhandled-request errors)
 function noScoringConfigs() {
-  return http.get(`${BASE_URL}/scoring-configs`, () =>
-    HttpResponse.json({ data: [] }),
-  );
+  return http.get(`${BASE_URL}/api/scoring-configs`, () => HttpResponse.json([]));
+}
+
+// Saved searches with no entries
+function noSavedSearches() {
+  return http.get(`${BASE_URL}/api/saved-searches`, () => HttpResponse.json([]));
 }
 
 // ── Render helper ─────────────────────────────────────────────────────────────
@@ -70,6 +73,7 @@ describe('player search flow', () => {
   it('displays the initial player list on mount', async () => {
     mswServer.use(
       noScoringConfigs(),
+      noSavedSearches(),
       http.get(`${BASE_URL}/api/players`, () => HttpResponse.json(makePage())),
     );
 
@@ -87,6 +91,7 @@ describe('player search flow', () => {
 
     mswServer.use(
       noScoringConfigs(),
+      noSavedSearches(),
       http.get(`${BASE_URL}/api/players`, ({ request }) => {
         requestCount++;
         requestSearches.push(new URL(request.url).search);
@@ -117,6 +122,7 @@ describe('player search flow', () => {
 
     mswServer.use(
       noScoringConfigs(),
+      noSavedSearches(),
       http.get(`${BASE_URL}/api/players`, ({ request }) => {
         requestSearches.push(new URL(request.url).search);
         return HttpResponse.json(makePage());
@@ -136,11 +142,10 @@ describe('player search flow', () => {
 
   it('opens score breakdown modal after selecting a scoring config and clicking a score', async () => {
     mswServer.use(
-      http.get(`${BASE_URL}/scoring-configs`, () =>
-        HttpResponse.json({
-          data: [{ id: 'cfg-1', name: 'Standard', isActive: true }],
-        }),
+      http.get(`${BASE_URL}/api/scoring-configs`, () =>
+        HttpResponse.json([{ id: 'cfg-1', name: 'Standard', categoriesJson: '[]', createdAt: '2025-01-01T00:00:00Z' }]),
       ),
+      noSavedSearches(),
       http.get(`${BASE_URL}/api/players`, () => HttpResponse.json(makePage())),
       http.get(`${BASE_URL}/api/players/592450/score-breakdown`, () =>
         HttpResponse.json({

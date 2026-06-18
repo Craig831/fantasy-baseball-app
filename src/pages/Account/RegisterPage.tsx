@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
+import { register } from '../../api/auth';
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -15,15 +15,10 @@ const RegisterPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/auth/register', { email, password });
-      const { accessToken, refreshToken } = response.data.data;
-
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-
+      await register({ email, password });
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.errors?.[0]?.message || 'Registration failed');
+      setError(err.detail || err.message || 'Registration failed');
     } finally {
       setLoading(false);
     }

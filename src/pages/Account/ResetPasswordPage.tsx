@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import api from '../../services/api';
+import { resetPassword } from '../../api/auth';
 
 const ResetPasswordPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -34,11 +34,11 @@ const ResetPasswordPage: React.FC = () => {
     setLoading(true);
 
     try {
-      await api.post('/auth/reset-password', { token, newPassword });
+      await resetPassword(token, newPassword);
       setSuccess(true);
       setTimeout(() => navigate('/login'), 3000);
     } catch (err: any) {
-      setError(err.response?.data?.errors?.[0]?.message || 'Failed to reset password');
+      setError(err.detail || err.message || 'Failed to reset password');
     } finally {
       setLoading(false);
     }

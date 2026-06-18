@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import api from '../../services/api';
+import { verifyEmail } from '../../api/auth';
 
 const VerifyEmailPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -18,12 +18,12 @@ const VerifyEmailPage: React.FC = () => {
       }
 
       try {
-        await api.post('/auth/verify-email', { token });
+        await verifyEmail(token);
         setStatus('success');
         setTimeout(() => navigate('/'), 3000);
       } catch (err: any) {
         setStatus('error');
-        setError(err.response?.data?.errors?.[0]?.message || 'Email verification failed');
+        setError(err.detail || err.message || 'Email verification failed');
       }
     };
 

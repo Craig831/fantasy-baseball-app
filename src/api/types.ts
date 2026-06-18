@@ -99,3 +99,148 @@ export interface ScoreBreakdownDto {
   totalScore: number;
   categories: ScoreCategoryDto[];
 }
+
+// ── Scoring configs ───────────────────────────────────────────────────────────
+
+export interface ScoringConfigDto {
+  id: string;
+  name: string;
+  categoriesJson: string;
+  createdAt: string;
+}
+
+export interface CreateScoringConfigRequest {
+  name: string;
+  categoriesJson: string;
+}
+
+// ── Saved searches ────────────────────────────────────────────────────────────
+
+export interface SavedSearchDto {
+  id: string;
+  name: string;
+  filtersJson: string;
+  createdAt: string;
+}
+
+export interface CreateSavedSearchRequest {
+  name: string;
+  filtersJson: string;
+}
+
+// ── Leagues ───────────────────────────────────────────────────────────────────
+
+export interface LeagueSummaryDto {
+  id: number;
+  name: string;
+  type: string;
+  status: string;
+  teamName?: string | null;
+}
+
+export interface LeagueDto {
+  id: number;
+  name: string;
+  type: string;
+  status: string;
+  commissionerUserId: string;
+  maxTeams: number;
+  currentWeek: number;
+  createdAt: string;
+}
+
+export interface LeagueMemberDto {
+  id: number;
+  userId: string;
+  teamName: string;
+  status: string;
+  faabBudgetRemaining: number;
+}
+
+export interface CreateLeagueRequest {
+  name: string;
+  type: string;
+  maxTeams: number;
+}
+
+export interface JoinLeagueRequest {
+  token: string;
+  teamName: string;
+}
+
+export interface LeagueInvitePreviewDto {
+  leagueId: number;
+  leagueName: string;
+  inviterTeamName: string;
+  expiresAt: string | null;
+}
+
+export interface LeagueInviteCodeDto {
+  inviteCode: string;
+}
+
+export interface RosterSettingsDto {
+  maxPlayers: number;
+  maxBenchPlayers: number;
+  positionSlotsJson: string;
+}
+
+export interface ScoringSettingsDto {
+  statCategoriesJson: string;
+}
+
+export interface DraftSettingsDto {
+  draftType: string;
+  draftStatus: string;
+  scheduledAt: string | null;
+  secondsPerPick: number;
+  draftOrderJson: string;
+}
+
+// ── Teams / Lineups ───────────────────────────────────────────────────────────
+
+export interface TeamDashboardDto {
+  leagueId: number;
+  teamName: string;
+  currentWeek: number;
+  faabBudgetRemaining: number;
+  rosterSize: number;
+}
+
+export interface RosterSpotDto {
+  id: number;
+  mlbPlayerId: number;
+  playerName: string;
+  primaryPosition: string;
+  status: 'Active' | 'Bench' | 'InjuredReserve';
+  mlbTeamAbbreviation?: string | null;
+}
+
+export interface TeamLineupSlotDto {
+  slotPosition: string;
+  mlbPlayerId: number | null;
+  playerName: string | null;
+  isLocked: boolean;
+}
+
+export interface TeamLineupDto {
+  leagueId: number;
+  week: number;
+  slots: TeamLineupSlotDto[];
+}
+
+export interface SetLineupSlotRequest {
+  week: number;
+  slotPosition: string;
+  mlbPlayerId: number;
+}
+
+export interface MoveRosterSpotRequest {
+  rosterSpotId: number;
+  newStatus: 'Active' | 'Bench' | 'InjuredReserve';
+}
+
+export interface AddFreeAgentRequest {
+  addPlayerId: number;
+  dropRosterSpotId?: number;
+}

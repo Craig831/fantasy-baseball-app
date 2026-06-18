@@ -1,69 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../services/api';
-
-interface ScoringConfig {
-  id: string;
-  name: string;
-  categories: {
-    hitting: Record<string, number>;
-    pitching: Record<string, number>;
-  };
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+import { useScoringConfigsQuery } from '../../hooks/useScoringConfigs';
+import { parseJsonBlob } from '../../api/jsonBlobs';
+import type { StatCategoryWeight } from '../../api/jsonBlobs';
 
 const ScoringConfigsListPage: React.FC = () => {
   const navigate = useNavigate();
-  const [configs, setConfigs] = useState<ScoringConfig[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { data: configs, isLoading, isError, error } = useScoringConfigsQuery();
 
-  useEffect(() => {
-    fetchConfigs();
-  }, []);
-
-  const fetchConfigs = async () => {
-    try {
-      const response = await api.get('/scoring-configs');
-      setConfigs(response.data.data);
-      setLoading(false);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load configurations');
-      setLoading(false);
-    }
-  };
-
-  const handleActivate = async (id: string) => {
-    try {
-      await api.patch(`/scoring-configs/${id}/activate`);
-      fetchConfigs(); // Refresh the list
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to activate configuration');
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this configuration?')) {
-      return;
-    }
-
-    try {
-      await api.delete(`/scoring-configs/${id}`);
-      fetchConfigs(); // Refresh the list
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to delete configuration');
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-gray-600">Loading...</div>
       </div>
     );
   }
+
+  const errorMessage =
+    isError && error instanceof Error ? error.message : isError ? 'Failed to load configurations' : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -78,13 +32,13 @@ const ScoringConfigsListPage: React.FC = () => {
           </button>
         </div>
 
-        {error && (
+        {errorMessage && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
+            {errorMessage}
           </div>
         )}
 
-        {configs.length === 0 ? (
+        {!configs || configs.length === 0 ? (
           <div className="bg-white rounded-lg shadow p-8 text-center">
             <p className="text-gray-600 mb-4">You don't have any scoring configurations yet.</p>
             <button
@@ -96,86 +50,47 @@ const ScoringConfigsListPage: React.FC = () => {
           </div>
         ) : (
           <div className="grid gap-4">
-            {configs.map((config) => (
-              <div
-                key={config.id}
-                className={`bg-white rounded-lg shadow p-6 ${
-                  config.isActive ? 'ring-2 ring-indigo-600' : ''
-                }`}
-              >
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="flex items-center">
+            {configs.map((config) => {
+              const categories = parseJsonBlob<StatCategoryWeight[]>(config.categoriesJson) ?? [];
+              return (
+                <div key={config.id} className="bg-white rounded-lg shadow p-6">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-900">{config.name}</h3>
-                      {config.isActive && (
-                        <span className="ml-2 px-2 py-1 bg-indigo-100 text-indigo-800 text-xs font-medium rounded">
-                          Active
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Created: {new Date(config.createdAt).toLocaleDateString()}
-                    </p>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Created: {new Date(config.createdAt).toLocaleDateString()}
+                      </p>
 
-                    <div className="mt-4 grid grid-cols-2 gap-4">
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Hitting Stats</h4>
-                        <div className="text-sm text-gray-600">
-                          {Object.entries(config.categories.hitting).slice(0, 3).map(([stat, points]) => (
-                            <div key={stat}>
-                              {stat}: {points} pts
-                            </div>
+                      <div className="mt-3">
+                        <h4 className="text-sm font-medium text-gray-700 mb-1">Categories</h4>
+                        <div className="text-sm text-gray-600 flex flex-wrap gap-x-4">
+                          {categories.slice(0, 5).map((cat) => (
+                            <span key={cat.statKey}>
+                              {cat.statKey}: {cat.pointValue} pts
+                            </span>
                           ))}
-                          {Object.keys(config.categories.hitting).length > 3 && (
-                            <div className="text-gray-400">
-                              +{Object.keys(config.categories.hitting).length - 3} more
-                            </div>
+                          {categories.length > 5 && (
+                            <span className="text-gray-400">+{categories.length - 5} more</span>
                           )}
-                        </div>
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Pitching Stats</h4>
-                        <div className="text-sm text-gray-600">
-                          {Object.entries(config.categories.pitching).slice(0, 3).map(([stat, points]) => (
-                            <div key={stat}>
-                              {stat}: {points} pts
-                            </div>
-                          ))}
-                          {Object.keys(config.categories.pitching).length > 3 && (
-                            <div className="text-gray-400">
-                              +{Object.keys(config.categories.pitching).length - 3} more
-                            </div>
+                          {categories.length === 0 && (
+                            <span className="text-gray-400">No categories defined</span>
                           )}
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="flex flex-col space-y-2 ml-4">
-                    <button
-                      onClick={() => navigate(`/scoring-configs/${config.id}/edit`)}
-                      className="bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-200"
-                    >
-                      Edit
-                    </button>
-                    {!config.isActive && (
+                    <div className="ml-4">
                       <button
-                        onClick={() => handleActivate(config.id)}
-                        className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded text-sm hover:bg-indigo-200"
+                        onClick={() => navigate(`/scoring-configs/new`)}
+                        className="bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-200"
                       >
-                        Set Active
+                        Copy
                       </button>
-                    )}
-                    <button
-                      onClick={() => handleDelete(config.id)}
-                      className="bg-red-100 text-red-700 px-3 py-1 rounded text-sm hover:bg-red-200"
-                    >
-                      Delete
-                    </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

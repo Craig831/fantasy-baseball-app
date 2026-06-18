@@ -67,6 +67,18 @@ export async function logout(): Promise<void> {
   }
 }
 
+export async function forgotPassword(email: string): Promise<void> {
+  await apiClient.post('/api/auth/forgot-password', { email });
+}
+
+export async function resetPassword(token: string, newPassword: string): Promise<void> {
+  await apiClient.post('/api/auth/reset-password', { token, newPassword });
+}
+
+export async function verifyEmail(token: string): Promise<void> {
+  await apiClient.post('/api/auth/verify-email', { token });
+}
+
 export async function getCurrentUser(): Promise<UserProfileDto> {
   const response = await apiClient.get<UserProfileDto>('/api/users/me');
   return response.data;
