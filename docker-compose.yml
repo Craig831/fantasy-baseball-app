@@ -1,76 +1,13 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: fantasy-baseball-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fantasy_baseball
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - fantasy-baseball-network
-
-  redis:
-    image: redis:7-alpine
-    container_name: fantasy-baseball-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-    networks:
-      - fantasy-baseball-network
-
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: fantasy-baseball-backend
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/fantasy_baseball
-      - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-in-production}
-      - JWT_EXPIRES_IN=15m
-      - JWT_REFRESH_EXPIRES_IN=7d
-      - CORS_ORIGINS=http://localhost:3001,http://localhost
-      - PORT=3000
-    ports:
-      - "3000:3000"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - fantasy-baseball-network
-    restart: unless-stopped
-
   frontend:
     build:
-      context: ./frontend
+      context: .
       dockerfile: Dockerfile
     container_name: fantasy-baseball-frontend
     environment:
-      - VITE_API_URL=http://localhost/api
-    ports:
-      - "3001:8080"
-    depends_on:
-      - backend
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:5000}
     networks:
       - fantasy-baseball-network
     restart: unless-stopped
@@ -83,15 +20,10 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - backend
       - frontend
     networks:
       - fantasy-baseball-network
     restart: unless-stopped
-
-volumes:
-  postgres_data:
-  redis_data:
 
 networks:
   fantasy-baseball-network:

@@ -132,7 +132,7 @@ backend/
     └── contract/
         └── player-research-api.spec.ts
 
-frontend/
+
 ├── src/
 │   ├── features/
 │   │   └── player-research/

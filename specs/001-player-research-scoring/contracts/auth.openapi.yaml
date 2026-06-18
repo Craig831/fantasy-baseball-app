@@ -1,15 +1,15 @@
 openapi: 3.0.3
 info:
-  title: Fantasy Baseball Scorer - Authentication API
+  title: Fantasy Baseball App - Authentication API
   description: User registration, authentication, and MFA management endpoints
   version: 1.0.0
   contact:
-    name: Fantasy Baseball Scorer Team
+    name: Fantasy Baseball App Team
 
 servers:
   - url: http://localhost:3000/api
     description: Local development server
-  - url: https://api.fantasy-baseball-scorer.com
+  - url: https://api.fantasy-baseball-app.com
     description: Production server
 
 tags:

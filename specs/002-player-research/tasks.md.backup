@@ -15,7 +15,7 @@
 
 ## Path Conventions
 
-- **Web app**: `backend/src/`, `frontend/src/`
+- **Web app**: `backend/src/`, `src/`
 - All paths use the existing NestJS/React structure
 
 ---
@@ -27,7 +27,7 @@
 - [X] T001 Create Prisma schema models for Player, PlayerStatistic, and SavedSearch in backend/prisma/schema.prisma
 - [X] T002 Generate Prisma migration for new player research tables
 - [X] T003 [P] Create backend module structure: backend/src/modules/players/, backend/src/modules/player-research/, backend/src/modules/mlb-stats/
-- [X] T004 [P] Create frontend component structure: frontend/src/components/player-research/, frontend/src/pages/PlayerResearch.tsx
+- [X] T004 [P] Create frontend component structure: src/components/player-research/, src/pages/PlayerResearch.tsx
 - [X] T005 [P] Install MLB-StatsAPI HTTP client dependencies in backend/package.json
 - [X] T006 Run Prisma migration to create Player, PlayerStatistic, and SavedSearch tables
 
@@ -43,7 +43,7 @@
 - [X] T008 Implement MLB API response DTOs in backend/src/modules/mlb-stats/dto/
 - [X] T009 Create players module with service and controller in backend/src/modules/players/
 - [X] T010 [P] Create player-research module with service and controller in backend/src/modules/player-research/
-- [X] T011 [P] Create TypeScript types for Player and PlayerStatistic in frontend/src/types/player.ts
+- [X] T011 [P] Create TypeScript types for Player and PlayerStatistic in src/types/player.ts
 - [X] T012 Implement background job scheduler service in backend/src/modules/players/jobs/player-stats-refresh.service.ts
 - [X] T013 Configure NestJS Schedule module in backend/src/app.module.ts
 - [X] T014 [P] Create initial data seeding script to populate Player table from MLB API
@@ -72,11 +72,11 @@
 
 ### Frontend Implementation
 
-- [X] T024 [P] [US1] Create PlayerResearch page component in frontend/src/pages/PlayerResearch.tsx
-- [X] T025 [P] [US1] Create FilterPanel component with position, team, date range controls in frontend/src/components/player-research/FilterPanel.tsx
-- [X] T026 [P] [US1] Create PlayerList component to display search results in frontend/src/components/player-research/PlayerList.tsx
-- [X] T027 [P] [US1] Create PlayerCard component for individual player display in frontend/src/components/player-research/PlayerCard.tsx
-- [X] T028 [US1] Implement API service methods for player search in frontend/src/services/api.ts
+- [X] T024 [P] [US1] Create PlayerResearch page component in src/pages/PlayerResearch.tsx
+- [X] T025 [P] [US1] Create FilterPanel component with position, team, date range controls in src/components/player-research/FilterPanel.tsx
+- [X] T026 [P] [US1] Create PlayerList component to display search results in src/components/player-research/PlayerList.tsx
+- [X] T027 [P] [US1] Create PlayerCard component for individual player display in src/components/player-research/PlayerCard.tsx
+- [X] T028 [US1] Implement API service methods for player search in src/services/api.ts
 - [X] T029 [US1] Connect FilterPanel to API and update PlayerList on filter changes
 - [X] T030 [P] [US1] Implement pagination controls in PlayerList component
 - [X] T031 [P] [US1] Add loading states and error handling to PlayerResearch page
@@ -86,8 +86,8 @@
 - [X] T032 [P] [US1] Write unit tests for PlayersService filtering logic in backend/src/modules/players/players.service.spec.ts
 - [X] T033 [P] [US1] Write unit tests for SearchPlayersDto validation in backend/src/modules/player-research/dto/search-players.dto.spec.ts
 - [ ] T034 [P] [US1] Write e2e tests for GET /api/players with various filters in backend/test/player-research.e2e-spec.ts
-- [ ] T035 [P] [US1] Write React component tests for FilterPanel in frontend/src/components/player-research/FilterPanel.test.tsx
-- [ ] T036 [P] [US1] Write React component tests for PlayerList in frontend/src/components/player-research/PlayerList.test.tsx
+- [ ] T035 [P] [US1] Write React component tests for FilterPanel in src/components/player-research/FilterPanel.test.tsx
+- [ ] T036 [P] [US1] Write React component tests for PlayerList in src/components/player-research/PlayerList.test.tsx
 
 **US1 Complete**: Users can search and filter players by position, team, and date range
 
@@ -112,11 +112,11 @@
 
 ### Frontend Implementation
 
-- [X] T045 [P] [US2] Create ScoringConfigSelector component in frontend/src/components/player-research/ScoringConfigSelector.tsx
+- [X] T045 [P] [US2] Create ScoringConfigSelector component in src/components/player-research/ScoringConfigSelector.tsx
 - [X] T046 [P] [US2] Update PlayerCard to display calculated score prominently
-- [X] T047 [P] [US2] Create ScoreBreakdownModal component in frontend/src/components/player-research/ScoreBreakdownModal.tsx
+- [X] T047 [P] [US2] Create ScoreBreakdownModal component in src/components/player-research/ScoreBreakdownModal.tsx
 - [X] T048 [US2] Add onClick handler to scores to open ScoreBreakdownModal
-- [X] T049 [US2] Implement API service method for score breakdown in frontend/src/services/api.ts
+- [X] T049 [US2] Implement API service method for score breakdown in src/services/api.ts
 - [X] T050 [US2] Add score sorting functionality to PlayerList (sort by score desc/asc)
 - [X] T051 [P] [US2] Display "Select scoring configuration" message when no config active
 - [X] T052 [P] [US2] Implement real-time score recalculation when config changes
@@ -126,8 +126,8 @@
 - [X] T053 [P] [US2] Write unit tests for score calculation logic in backend/src/modules/player-research/services/score-calculation.service.spec.ts
 - [ ] T054 [P] [US2] Write unit tests for score breakdown DTO transformation in backend/src/modules/player-research/dto/score-breakdown.dto.spec.ts
 - [ ] T055 [P] [US2] Write e2e tests for GET /api/players/:id/score-breakdown in backend/test/player-research.e2e-spec.ts
-- [ ] T056 [P] [US2] Write React component tests for ScoreBreakdownModal in frontend/src/components/player-research/ScoreBreakdownModal.test.tsx
-- [ ] T057 [P] [US2] Write integration test for score recalculation on config change in frontend/src/pages/PlayerResearch.test.tsx
+- [ ] T056 [P] [US2] Write React component tests for ScoreBreakdownModal in src/components/player-research/ScoreBreakdownModal.test.tsx
+- [ ] T057 [P] [US2] Write integration test for score recalculation on config change in src/pages/PlayerResearch.test.tsx
 
 **US2 Complete**: Users can view calculated scores and detailed breakdowns based on their scoring configuration
 
@@ -154,9 +154,9 @@
 
 ### Frontend Implementation
 
-- [ ] T068 [P] [US3] Create SavedSearches component to display list in frontend/src/components/player-research/SavedSearches.tsx
-- [ ] T069 [P] [US3] Create SaveSearchModal component for saving new searches in frontend/src/components/player-research/SaveSearchModal.tsx
-- [ ] T070 [US3] Implement API service methods for saved search CRUD in frontend/src/services/api.ts
+- [ ] T068 [P] [US3] Create SavedSearches component to display list in src/components/player-research/SavedSearches.tsx
+- [ ] T069 [P] [US3] Create SaveSearchModal component for saving new searches in src/components/player-research/SaveSearchModal.tsx
+- [ ] T070 [US3] Implement API service methods for saved search CRUD in src/services/api.ts
 - [ ] T071 [US3] Add "Save Search" button to FilterPanel that opens SaveSearchModal
 - [ ] T072 [US3] Implement saved search loading functionality (apply all filters from saved search)
 - [ ] T073 [P] [US3] Add edit and delete actions to SavedSearches list items
@@ -168,8 +168,8 @@
 - [ ] T076 [P] [US3] Write unit tests for SavedSearchService CRUD operations in backend/src/modules/player-research/services/saved-search.service.spec.ts
 - [ ] T077 [P] [US3] Write unit tests for CreateSavedSearchDto validation in backend/src/modules/player-research/dto/create-saved-search.dto.spec.ts
 - [ ] T078 [P] [US3] Write e2e tests for saved search endpoints in backend/test/player-research.e2e-spec.ts
-- [ ] T079 [P] [US3] Write React component tests for SaveSearchModal in frontend/src/components/player-research/SaveSearchModal.test.tsx
-- [ ] T080 [P] [US3] Write React component tests for SavedSearches in frontend/src/components/player-research/SavedSearches.test.tsx
+- [ ] T079 [P] [US3] Write React component tests for SaveSearchModal in src/components/player-research/SaveSearchModal.test.tsx
+- [ ] T080 [P] [US3] Write React component tests for SavedSearches in src/components/player-research/SavedSearches.test.tsx
 
 **US3 Complete**: Users can save, load, edit, and delete custom search criteria
 

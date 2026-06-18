@@ -191,7 +191,7 @@ frontend/src/pages/PlayerResearch.tsx - Wire up handlers
 ## Quick Resume Command
 
 ```bash
-cd /mnt/c/Users/Craig.Jeffords/source/repos/fantasy-baseball-scorer/backend
+cd /mnt/c/Users/craig/source/repos/fantasy-baseball-app/backend
 
 # Test backend build
 npm run build

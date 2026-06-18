@@ -1,0 +1,45 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Testing
+coverage
+src/**/*.test.ts
+src/**/*.test.tsx
+src/**/*.spec.ts
+src/**/*.spec.tsx
+
+# Development files
+.env.local
+.env.development
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Build artifacts
+build
+
+# Documentation and spec artifacts (not part of app)
+docs
+specs
+*.md
+!README.md
+
+# Tooling / workflow
+.specify
+.claude
+
+# Infrastructure config (mounted separately in docker-compose)
+infrastructure
+
+# Logs
+logs
+*.log
