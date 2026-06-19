@@ -36,6 +36,16 @@ import type {
   UserProfileDto,
 } from '../api/types';
 
+// avatarUrl is root-relative (e.g. "/avatars/abc.jpg") — prepend the API base
+// so <img src> resolves correctly when the app and API are on different origins.
+function normalizeProfile(profile: UserProfileDto): UserProfileDto {
+  const base = import.meta.env.VITE_API_BASE_URL ?? '';
+  return {
+    ...profile,
+    avatarUrl: profile.avatarUrl ? `${base}${profile.avatarUrl}` : profile.avatarUrl,
+  };
+}
+
 interface AuthContextValue {
   currentUser: UserProfileDto | null;
   isLoading: boolean;
@@ -84,7 +94,7 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactElemen
     try {
       await apiRefresh(refreshToken);
       const profile = await fetchCurrentUser();
-      if (mountedRef.current) setCurrentUser(profile);
+      if (mountedRef.current) setCurrentUser(normalizeProfile(profile));
     } catch {
       if (mountedRef.current) setCurrentUser(null);
     } finally {
@@ -117,13 +127,13 @@ export function AuthProvider({ children }: AuthProviderProps): React.ReactElemen
   const signIn = useCallback(async (email: string, password: string) => {
     await apiLogin({ email, password });
     const profile = await fetchCurrentUser();
-    if (mountedRef.current) setCurrentUser(profile);
+    if (mountedRef.current) setCurrentUser(normalizeProfile(profile));
   }, []);
 
   const register = useCallback(async (payload: RegisterRequest) => {
     await apiRegister(payload);
     const profile = await fetchCurrentUser();
-    if (mountedRef.current) setCurrentUser(profile);
+    if (mountedRef.current) setCurrentUser(normalizeProfile(profile));
   }, []);
 
   const signOut = useCallback(async () => {

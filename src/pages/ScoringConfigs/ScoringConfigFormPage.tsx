@@ -10,16 +10,18 @@ interface StatEntry {
   pointValue: number;
 }
 
+// statKey values must match PlayerGameDto property names on the JellyBaseballV2 API.
+// See JellyBaseballV2/docs/web-client/JSON-BLOBS.md and WORKFLOWS.md for the full list.
 const DEFAULT_STATS: StatEntry[] = [
-  { statKey: 'HR', pointValue: 4 },
-  { statKey: 'RBI', pointValue: 1 },
-  { statKey: 'R', pointValue: 1 },
-  { statKey: 'SB', pointValue: 2 },
-  { statKey: 'AVG', pointValue: 3 },
-  { statKey: 'W', pointValue: 5 },
-  { statKey: 'SV', pointValue: 5 },
-  { statKey: 'K', pointValue: 1 },
-  { statKey: 'ERA', pointValue: -2 },
+  { statKey: 'HomeRuns',    pointValue: 4  },
+  { statKey: 'Rbi',         pointValue: 1  },
+  { statKey: 'Runs',        pointValue: 1  },
+  { statKey: 'StolenBases', pointValue: 2  },
+  { statKey: 'Singles',     pointValue: 1  },
+  { statKey: 'Wins',        pointValue: 5  },
+  { statKey: 'Saves',       pointValue: 3  },
+  { statKey: 'StrikeOuts',  pointValue: 1  },
+  { statKey: 'EarnedRuns',  pointValue: -1 },
 ];
 
 const ScoringConfigFormPage: React.FC = () => {
@@ -123,7 +125,7 @@ const ScoringConfigFormPage: React.FC = () => {
                     type="text"
                     value={stat.statKey}
                     onChange={(e) => updateStat(index, 'statKey', e.target.value)}
-                    placeholder="Stat key (e.g., HR)"
+                    placeholder="e.g., HomeRuns"
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
                   <input
