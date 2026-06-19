@@ -16,6 +16,8 @@ interface FilterPanelProps {
  *
  * Implements T020-T026 and accessibility features T038-T045
  */
+type Availability = 'All' | 'FreeAgent' | 'Owned';
+
 const FilterPanel: React.FC<FilterPanelProps> = ({ onFiltersApplied }) => {
   const {
     pending,
@@ -24,6 +26,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFiltersApplied }) => {
     applyFilters,
     clearFilters,
   } = usePlayerFilters();
+
+  const [availability, setAvailability] = React.useState<Availability>('All');
 
   // Position options based on statistic type
   const BATTING_POSITIONS = ['C', '1B', '2B', '3B', 'SS', 'OF', 'LF', 'CF', 'RF', 'DH'];
@@ -51,24 +55,6 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFiltersApplied }) => {
   const handleApply = () => {
     const result = applyFilters();
     if (result.success && result.filters && onFiltersApplied) {
-      // Transform FilterCriteria to PlayerSearchFilters format
-      const transformedFilters = {
-        position: result.filters.positions,
-        league: 'both' as const, // Default to 'both' for now
-        statisticType: result.filters.statisticType,
-        dateFrom: result.filters.dateRange.from || undefined,
-        dateTo: result.filters.dateRange.to || undefined,
-        status: result.filters.status,
-        season: result.filters.season,
-      };
-      onFiltersApplied(transformedFilters);
-    }
-  };
-
-  const handleClear = () => {
-    const result = clearFilters();
-    if (result.success && result.filters && onFiltersApplied) {
-      // Transform FilterCriteria to PlayerSearchFilters format
       const transformedFilters = {
         position: result.filters.positions,
         league: 'both' as const,
@@ -77,6 +63,25 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFiltersApplied }) => {
         dateTo: result.filters.dateRange.to || undefined,
         status: result.filters.status,
         season: result.filters.season,
+        availability,
+      };
+      onFiltersApplied(transformedFilters);
+    }
+  };
+
+  const handleClear = () => {
+    setAvailability('All');
+    const result = clearFilters();
+    if (result.success && result.filters && onFiltersApplied) {
+      const transformedFilters = {
+        position: result.filters.positions,
+        league: 'both' as const,
+        statisticType: result.filters.statisticType,
+        dateFrom: result.filters.dateRange.from || undefined,
+        dateTo: result.filters.dateRange.to || undefined,
+        status: result.filters.status,
+        season: result.filters.season,
+        availability: 'All' as Availability,
       };
       onFiltersApplied(transformedFilters);
     }
@@ -154,6 +159,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFiltersApplied }) => {
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
             <option value="retired">Retired</option>
+          </select>
+        </div>
+
+        {/* Availability filter */}
+        <div className="filter-field">
+          <label htmlFor="availability" className="filter-label">
+            Availability
+          </label>
+          <select
+            id="availability"
+            value={availability}
+            onChange={(e) => setAvailability(e.target.value as Availability)}
+            className="filter-select"
+            aria-label="Player availability"
+          >
+            <option value="All">All players</option>
+            <option value="FreeAgent">Free agents</option>
+            <option value="Owned">Owned</option>
           </select>
         </div>
 

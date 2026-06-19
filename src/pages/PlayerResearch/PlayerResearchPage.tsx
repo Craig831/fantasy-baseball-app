@@ -72,6 +72,7 @@ const PlayerResearch: React.FC = () => {
       ...prev,
       pageNumber: 1,
       statusCode: newFilters.status,
+      availability: newFilters.availability === 'All' ? undefined : newFilters.availability,
     }));
   };
 
